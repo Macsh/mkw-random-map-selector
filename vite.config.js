@@ -9,7 +9,30 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['mkw-favicon.svg'],
+      includeAssets: [
+        'mkw-favicon.svg',
+        '*.webp',
+        '*.png',
+        '*.jpg',
+        '*.jpeg',
+        '*.svg'
+      ],
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,jpg,jpeg}'],
+        runtimeCaching: [
+          {
+            urlPattern: /\.(?:png|jpg|jpeg|svg|webp)$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'images-cache',
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+              },
+            },
+          },
+        ],
+      },
       manifest: {
         name: 'Mario Kart World Random Map Selector',
         short_name: 'MKW Selector',
