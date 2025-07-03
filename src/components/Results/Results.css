@@ -1,0 +1,342 @@
+.results {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a5c1a, #2d8f2d);
+  color: white;
+  padding: 1rem;
+  font-family: 'Arial', sans-serif;
+}
+
+.results-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.results-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.results-header h1 {
+  font-size: 2.5rem;
+  margin: 0 0 0.5rem 0;
+  color: #FFD700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.results-header p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.standings-section {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.standings-section h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  color: #FFD700;
+}
+
+.standings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.standing-item {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.standing-item:hover {
+  transform: translateY(-2px);
+}
+
+.standing-item.position-1 {
+  background: linear-gradient(45deg, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1));
+  border: 2px solid #FFD700;
+}
+
+.standing-item.position-2 {
+  background: linear-gradient(45deg, rgba(192, 192, 192, 0.3), rgba(192, 192, 192, 0.1));
+  border: 2px solid #C0C0C0;
+}
+
+.standing-item.position-3 {
+  background: linear-gradient(45deg, rgba(205, 127, 50, 0.3), rgba(205, 127, 50, 0.1));
+  border: 2px solid #CD7F32;
+}
+
+.standing-rank {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+
+.medal {
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+}
+
+.position {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.standing-info {
+  flex: 1;
+}
+
+.player-name {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.3rem;
+}
+
+.points {
+  margin: 0;
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.race-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.race-history {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.race-history h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  color: #FFD700;
+}
+
+.race-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.race-item {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px; /* Reduced from 10px */
+  padding: 0.75rem; /* Reduced from 1rem */
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.75rem; /* Reduced from 1rem */
+  align-items: start;
+}
+
+.race-number {
+  background: #FF0000;
+  color: white;
+  padding: 0.4rem; /* Reduced from 0.5rem */
+  border-radius: 6px; /* Reduced from 8px */
+  text-align: center;
+  font-weight: bold;
+  min-width: 50px; /* Reduced from 60px */
+  font-size: 0.9rem; /* Added smaller font size */
+}
+
+.race-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem; /* Reduced from 0.5rem */
+}
+
+.race-name {
+  margin: 0;
+  font-size: 1.1rem; /* Reduced from 1.2rem */
+}
+
+.race-theme {
+  padding: 0.2rem 0.6rem; /* Reduced padding */
+  border-radius: 12px; /* Reduced from 15px */
+  font-size: 0.8rem; /* Reduced from 0.9rem */
+  font-weight: bold;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  width: fit-content;
+}
+
+.race-results {
+  min-width: 200px; /* Added to maintain consistent width */
+}
+
+.race-results h4 {
+  margin: 0 0 0.4rem 0; /* Reduced margin */
+  font-size: 0.9rem; /* Reduced from 1rem */
+}
+
+.position-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem; /* Reduced from 0.25rem */
+}
+
+.position-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem; /* Reduced from 0.5rem */
+  font-size: 0.85rem; /* Added smaller font size */
+}
+
+.position-medal {
+  font-size: 1rem;
+}
+
+.session-stats {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.session-stats h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  color: #FFD700;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.stat-item {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.stat-number {
+  display: block;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #FFD700;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.action-section {
+  text-align: center;
+}
+
+.new-session-button {
+  padding: 1rem 3rem;
+  background: #FF0000;
+  border: none;
+  color: white;
+  border-radius: 15px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+  margin-bottom: 1rem;
+}
+
+.new-session-button:hover {
+  background: #CC0000;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4);
+}
+
+.sharing-options p {
+  margin: 0.5rem 0;
+  opacity: 0.8;
+}
+
+.share-button {
+  padding: 0.75rem 1.5rem;
+  background: #0066CC;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.share-button:hover {
+  background: #0052A3;
+  transform: translateY(-1px);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .results {
+    padding: 0.5rem;
+  }
+
+  .results-header h1 {
+    font-size: 2rem;
+  }
+
+  .standings-section,
+  .race-history,
+  .session-stats {
+    padding: 1rem;
+  }
+
+  .standing-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .standing-rank {
+    min-width: auto;
+  }
+
+  .race-item {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .race-info {
+    align-items: center;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .new-session-button {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+  }
+}

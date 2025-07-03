@@ -1,0 +1,94 @@
+export const translations = {
+  en: {
+    // App title
+    'app.title': 'Mario Kart World',
+    'app.subtitle': 'Random Map Selector',
+    
+    // Selection screen
+    'selection.raceCount': 'Number of Races',
+    'selection.showPlayers': 'Show Player Options',
+    'selection.hidePlayers': 'Hide Player Options',
+    'selection.playerNames': 'Player Names (Optional)',
+    'selection.playerPlaceholder': 'Player',
+    'selection.playerHelp': 'Enter names for tournament tracking. Leave empty for quick races.',
+    'selection.startSession': 'Start Session',
+    'selection.selected': 'Selected:',
+    'selection.races': 'races',
+    'selection.with': 'with',
+    'selection.players': 'player(s)',
+    'selection.warning32': '⚠️ With 32 races, 2 circuits will be repeated after all 30 unique tracks are used.',
+    
+    // World map
+    'worldMap.race': 'Race',
+    'worldMap.of': 'of',
+    'worldMap.enterPositions': 'Enter Player Positions',
+    'worldMap.nextRace': 'Next Race',
+    'worldMap.viewResults': 'View Results',
+    'worldMap.backToRaces': 'Back to Races',
+    'worldMap.raceHistory': 'Race History',
+    'worldMap.editRace': 'Edit Race',
+    'worldMap.position': 'Position',
+    'worldMap.confirm': 'Confirm',
+    'worldMap.cancel': 'Cancel',
+    'worldMap.missingResults': 'Missing results for previous races',
+    'worldMap.clickToEdit': 'Click on any race to edit results',
+    
+    // Results
+    'results.finalResults': 'Final Results',
+    'results.tournamentComplete': 'Tournament Complete!',
+    'results.finalStandings': 'Final Standings',
+    'results.player': 'Player',
+    'results.points': 'Points',
+    'results.raceHistory': 'Race History',
+    'results.race': 'Race',
+    'results.circuit': 'Circuit',
+    'results.newSession': 'New Session',
+    'results.backToSelection': 'Back to Selection'
+  },
+  fr: {
+    // App title
+    'app.title': 'Mario Kart World',
+    'app.subtitle': 'Sélecteur de Circuit Aléatoire',
+    
+    // Selection screen
+    'selection.raceCount': 'Nombre de Courses',
+    'selection.showPlayers': 'Afficher les Options Joueurs',
+    'selection.hidePlayers': 'Masquer les Options Joueurs',
+    'selection.playerNames': 'Noms des Joueurs (Optionnel)',
+    'selection.playerPlaceholder': 'Joueur',
+    'selection.playerHelp': 'Entrez les noms pour le suivi du tournoi. Laissez vide pour des courses rapides.',
+    'selection.startSession': 'Démarrer la Session',
+    'selection.selected': 'Sélectionné :',
+    'selection.races': 'courses',
+    'selection.with': 'avec',
+    'selection.players': 'joueur(s)',
+    'selection.warning32': '⚠️ Avec 32 courses, 2 circuits seront répétés après que les 30 circuits uniques soient utilisés.',
+    
+    // World map
+    'worldMap.race': 'Course',
+    'worldMap.of': 'sur',
+    'worldMap.enterPositions': 'Entrer les Positions des Joueurs',
+    'worldMap.nextRace': 'Course Suivante',
+    'worldMap.viewResults': 'Voir les Résultats',
+    'worldMap.backToRaces': 'Retour aux Courses',
+    'worldMap.raceHistory': 'Historique des Courses',
+    'worldMap.editRace': 'Modifier la Course',
+    'worldMap.position': 'Position',
+    'worldMap.confirm': 'Confirmer',
+    'worldMap.cancel': 'Annuler',
+    'worldMap.missingResults': 'Résultats manquants pour les courses précédentes',
+    'worldMap.clickToEdit': 'Cliquez sur une course pour modifier les résultats',
+    
+    // Results
+    'results.finalResults': 'Résultats Finaux',
+    'results.tournamentComplete': 'Tournoi Terminé !',
+    'results.finalStandings': 'Classement Final',
+    'results.player': 'Joueur',
+    'results.points': 'Points',
+    'results.raceHistory': 'Historique des Courses',
+    'results.race': 'Course',
+    'results.circuit': 'Circuit',
+    'results.newSession': 'Nouvelle Session',
+    'results.backToSelection': 'Retour à la Sélection'
+  }
+};
