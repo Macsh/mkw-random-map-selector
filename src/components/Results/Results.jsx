@@ -1,9 +1,23 @@
 import { calculateStandings } from '../../utils/raceLogic.js';
-import { trackThemes } from '../../data/circuits.js';
+import { trackThemes, getCircuitName } from '../../data/circuits.js';
+import { useLanguage } from '../../contexts/useLanguage.js';
 import './Results.css';
 
 function Results({ sessionData, onNewSession }) {
-  const { races, players, raceResults } = sessionData;
+  const { language, t } = useLanguage();
+  
+  if (!sessionData) {
+    return (
+      <div className="results">
+        <div className="results-container">
+          <h1>Error: No session data</h1>
+          <button onClick={onNewSession}>Back to Selection</button>
+        </div>
+      </div>
+    );
+  }
+
+  const { races = [], players = [], raceResults = [] } = sessionData;
   const standings = calculateStandings(raceResults, players);
 
   const getMedalEmoji = (position) => {
@@ -26,13 +40,13 @@ function Results({ sessionData, onNewSession }) {
     <div className="results">
       <div className="results-container">
         <div className="results-header">
-          <h1>🏆 Session Complete!</h1>
-          <p>{races.length} races completed</p>
+          <h1>🏆 {t('results.tournamentComplete')}</h1>
+          <p>{races.length} {t('selection.races')} completed</p>
         </div>
 
         {players.length > 0 && (
           <div className="standings-section">
-            <h2>Final Standings</h2>
+            <h2>{t('results.finalStandings')}</h2>
             <div className="standings-list">
               {standings.map((player, index) => (
                 <div key={player.name} className={`standing-item position-${index + 1}`}>
@@ -59,15 +73,15 @@ function Results({ sessionData, onNewSession }) {
         )}
 
         <div className="race-history">
-          <h2>Race History</h2>
+          <h2>{t('results.raceHistory')}</h2>
           <div className="race-list">
             {races.map((race, index) => (
               <div key={race.id} className="race-item">
                 <div className="race-number">
-                  <span>Race {index + 1}</span>
+                  <span>{t('worldMap.race')} {index + 1}</span>
                 </div>
                 <div className="race-info">
-                  <h3 className="race-name">{race.name}</h3>
+                  <h3 className="race-name">{getCircuitName(race, language)}</h3>
                   <span 
                     className="race-theme"
                     style={{ backgroundColor: trackThemes[race.id] }}
@@ -104,7 +118,7 @@ function Results({ sessionData, onNewSession }) {
               <span className="stat-label">Races</span>
             </div>
             <div className="stat-item">
-              <span className="stat-number">{new Set(races.map(r => r.name.split(' ')[0])).size}</span>
+              <span className="stat-number">{new Set(races.filter(r => r.nameEn).map(r => getCircuitName(r, language).split(' ')[0])).size}</span>
               <span className="stat-label">Unique Themes</span>
             </div>
             {players.length > 0 && (
@@ -122,7 +136,7 @@ function Results({ sessionData, onNewSession }) {
 
         <div className="action-section">
           <button className="new-session-button" onClick={onNewSession}>
-            🏁 Start New Session
+            🏁 {t('results.newSession')}
           </button>
           
           <div className="sharing-options">
