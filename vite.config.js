@@ -17,7 +17,7 @@ export default defineConfig({
         theme_color: '#FF0000',
         background_color: '#0066CC',
         display: 'standalone',
-        start_url: '/',
+        start_url: '/mkw-random-map-selector/',
         icons: [
           {
             src: 'mkw-favicon.svg',
