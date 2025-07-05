@@ -31,11 +31,15 @@ function SelectionScreen({ onStartSession }) {
 
   return (
     <div className="selection-screen">
-      <LanguageToggle />
       <div className="selection-container">
-        <div className="title-section">
-          <h1 className="title">{t('app.title')}</h1>
-          <h2 className="subtitle">{t('app.subtitle')}</h2>
+        <div className="header-with-language">
+          <div className="title-with-flags">
+            <div className="title-block">
+              <h1 className="title">{t('app.title')}</h1>
+              <h2 className="subtitle">{t('app.subtitle')}</h2>
+            </div>
+            <LanguageToggle />
+          </div>
         </div>
 
         <div className="race-count-section">
