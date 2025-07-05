@@ -45,20 +45,3 @@
   font-size: 1.1rem;
   line-height: 1;
 }
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
-  .language-toggle {
-    padding: 0.25rem;
-  }
-  
-  .flag-button {
-    min-width: 28px;
-    min-height: 28px;
-    padding: 0.2rem;
-  }
-  
-  .flag {
-    font-size: 1rem;
-  }
-}
