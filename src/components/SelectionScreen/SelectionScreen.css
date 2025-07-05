@@ -6,6 +6,15 @@
   background: linear-gradient(135deg, #0066cc, #003d7a);
   color: white;
   font-family: 'Arial', sans-serif;
+  position: relative;
+}
+
+/* Position language toggle in top-right corner */
+.selection-screen > .language-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
 }
 
 .selection-container {
@@ -17,6 +26,11 @@
   width: 90%;
   text-align: center;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.title-section {
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
 .title {
@@ -173,51 +187,6 @@
   border-left: 4px solid #FFD700;
 }
 
-.header-with-language {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 2rem;
-}
-
-.title-section {
-  flex: 1;
-  text-align: center;
-}
-
-.language-toggle {
-  display: flex;
-  gap: 0.5rem;
-  flex-shrink: 0;
-}
-
-.language-button {
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 8px;
-  padding: 0.5rem;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.language-button:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.5);
-  transform: translateY(-2px);
-}
-
-.language-button.active {
-  background: rgba(255, 215, 0, 0.3);
-  border-color: #FFD700;
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-}
-
 /* Mobile responsiveness */
 @media (max-width: 600px) {
   .selection-container {
@@ -240,5 +209,11 @@
   .start-button {
     padding: 1rem 2rem;
     font-size: 1.1rem;
+  }
+
+  /* Adjust language toggle position on mobile */
+  .selection-screen > .language-toggle {
+    top: 0.5rem;
+    right: 0.5rem;
   }
 }

@@ -1,0 +1,64 @@
+.language-toggle {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+.flag-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  backdrop-filter: blur(10px);
+}
+
+.flag-button:focus {
+  outline: none;
+}
+
+.flag-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.flag-button:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.flag-button.active {
+  background: rgba(255, 215, 0, 0.2);
+  border-color: #FFD700;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+  transform: scale(1.05);
+}
+
+.flag {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .language-toggle {
+    padding: 0.25rem;
+  }
+  
+  .flag-button {
+    min-width: 28px;
+    min-height: 28px;
+    padding: 0.2rem;
+  }
+  
+  .flag {
+    font-size: 1rem;
+  }
+}

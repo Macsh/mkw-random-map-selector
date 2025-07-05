@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { trackThemes, getCircuitName } from '../../data/circuits.js';
 import { useLanguage } from '../../contexts/useLanguage.js';
+import LanguageToggle from '../LanguageToggle/LanguageToggle.jsx';
 import WorldMapCanvas from './WorldMapCanvas.jsx';
 import ZoomedMapCanvas from './ZoomedMapCanvas.jsx';
 import './WorldMap.css';
@@ -139,6 +140,7 @@ function WorldMap({
           >
             Track {raceIndex + 1}
           </span>
+          <LanguageToggle />
         </div>
       </div>
 

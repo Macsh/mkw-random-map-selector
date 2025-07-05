@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useLanguage } from '../../contexts/useLanguage.js';
+import LanguageToggle from '../LanguageToggle/LanguageToggle.jsx';
 import './SelectionScreen.css';
 
 function SelectionScreen({ onStartSession }) {
   const [raceCount, setRaceCount] = useState(8);
   const [showPlayerOptions, setShowPlayerOptions] = useState(false);
   const [players, setPlayers] = useState(['', '', '', '']);
-  const { language, toggleLanguage, t } = useLanguage();
+  const { t } = useLanguage();
 
   const raceOptions = [3, 4, 5, 6, 8, 12, 16, 32];
 
@@ -30,28 +31,11 @@ function SelectionScreen({ onStartSession }) {
 
   return (
     <div className="selection-screen">
+      <LanguageToggle />
       <div className="selection-container">
-        <div className="header-with-language">
-          <div className="title-section">
-            <h1 className="title">{t('app.title')}</h1>
-            <h2 className="subtitle">{t('app.subtitle')}</h2>
-          </div>
-          <div className="language-toggle">
-            <button 
-              className={`language-button ${language === 'en' ? 'active' : ''}`}
-              onClick={toggleLanguage}
-              aria-label="Switch to English"
-            >
-              🇺🇸
-            </button>
-            <button 
-              className={`language-button ${language === 'fr' ? 'active' : ''}`}
-              onClick={toggleLanguage}
-              aria-label="Passer au français"
-            >
-              🇫🇷
-            </button>
-          </div>
+        <div className="title-section">
+          <h1 className="title">{t('app.title')}</h1>
+          <h2 className="subtitle">{t('app.subtitle')}</h2>
         </div>
 
         <div className="race-count-section">

@@ -1,6 +1,7 @@
 import { calculateStandings } from '../../utils/raceLogic.js';
-import { trackThemes, getCircuitName } from '../../data/circuits.js';
+import { getCircuitName } from '../../data/circuits.js';
 import { useLanguage } from '../../contexts/useLanguage.js';
+import LanguageToggle from '../LanguageToggle/LanguageToggle.jsx';
 import './Results.css';
 
 function Results({ sessionData, onNewSession }) {
@@ -38,6 +39,7 @@ function Results({ sessionData, onNewSession }) {
 
   return (
     <div className="results">
+      <LanguageToggle />
       <div className="results-container">
         <div className="results-header">
           <h1>🏆 {t('results.tournamentComplete')}</h1>
@@ -60,10 +62,10 @@ function Results({ sessionData, onNewSession }) {
                   </div>
                   <div className="race-summary">
                     <div className="wins">
-                      🏆 {player.races.filter(r => r.position === 1).length} wins
+                      🏆 {player.races.filter(r => r.position === 1).length} {t('results.wins')}
                     </div>
                     <div className="podiums">
-                      🥇 {player.races.filter(r => r.position <= 3).length} podiums
+                      🥇 {player.races.filter(r => r.position <= 3).length} {t('results.podiums')}
                     </div>
                   </div>
                 </div>
@@ -82,16 +84,10 @@ function Results({ sessionData, onNewSession }) {
                 </div>
                 <div className="race-info">
                   <h3 className="race-name">{getCircuitName(race, language)}</h3>
-                  <span 
-                    className="race-theme"
-                    style={{ backgroundColor: trackThemes[race.id] }}
-                  >
-                    Track {index + 1}
-                  </span>
                 </div>
                 {players.length > 0 && raceResults[index] && raceResults[index].positions && (
                   <div className="race-results">
-                    <h4>Results:</h4>
+                    <h4>{t('results.results')}</h4>
                     <ol className="position-list">
                       {raceResults[index].positions.map((position, playerIndex) => {
                         const player = players[playerIndex];
@@ -110,37 +106,13 @@ function Results({ sessionData, onNewSession }) {
           </div>
         </div>
 
-        <div className="session-stats">
-          <h2>Session Statistics</h2>
-          <div className="stats-grid">
-            <div className="stat-item">
-              <span className="stat-number">{races.length}</span>
-              <span className="stat-label">Races</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-number">{new Set(races.filter(r => r.nameEn).map(r => getCircuitName(r, language).split(' ')[0])).size}</span>
-              <span className="stat-label">Unique Themes</span>
-            </div>
-            {players.length > 0 && (
-              <div className="stat-item">
-                <span className="stat-number">{players.length}</span>
-                <span className="stat-label">Players</span>
-              </div>
-            )}
-            <div className="stat-item">
-              <span className="stat-number">{races.length}</span>
-              <span className="stat-label">Total Tracks</span>
-            </div>
-          </div>
-        </div>
-
         <div className="action-section">
           <button className="new-session-button" onClick={onNewSession}>
             🏁 {t('results.newSession')}
           </button>
           
           <div className="sharing-options">
-            <p>Share your results:</p>
+            <p>{t('results.shareResults')}</p>
             <button 
               className="share-button"
               onClick={() => {
@@ -153,7 +125,7 @@ function Results({ sessionData, onNewSession }) {
                 }
               }}
             >
-              📱 Share Results
+              📱 {t('results.shareButton')}
             </button>
           </div>
         </div>

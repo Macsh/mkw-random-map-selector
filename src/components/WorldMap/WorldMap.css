@@ -24,6 +24,15 @@
   justify-content: center;
   gap: 1rem;
   flex-wrap: wrap;
+  position: relative;
+}
+
+/* Position language toggle on the right side of race info */
+.race-info .language-toggle {
+  position: absolute;
+  right: 0;
+  margin-bottom: 0;
+  padding: 0;
 }
 
 .re-render-button,

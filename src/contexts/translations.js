@@ -43,7 +43,18 @@ export const translations = {
     'results.race': 'Race',
     'results.circuit': 'Circuit',
     'results.newSession': 'New Session',
-    'results.backToSelection': 'Back to Selection'
+    'results.backToSelection': 'Back to Selection',
+    'results.sessionStats': 'Session Statistics',
+    'results.results': 'Results:',
+    'results.shareResults': 'Share your results:',
+    'results.shareButton': 'Share Results',
+    'results.wins': 'wins',
+    'results.podiums': 'podiums',
+    'results.track': 'Track',
+    'results.races': 'Races',
+    'results.uniqueThemes': 'Unique Themes',
+    'results.players': 'Players',
+    'results.totalTracks': 'Total Tracks'
   },
   fr: {
     // App title
@@ -89,6 +100,17 @@ export const translations = {
     'results.race': 'Course',
     'results.circuit': 'Circuit',
     'results.newSession': 'Nouvelle Session',
-    'results.backToSelection': 'Retour à la Sélection'
+    'results.backToSelection': 'Retour à la Sélection',
+    'results.sessionStats': 'Statistiques de Session',
+    'results.results': 'Résultats :',
+    'results.shareResults': 'Partagez vos résultats :',
+    'results.shareButton': 'Partager les Résultats',
+    'results.wins': 'victoires',
+    'results.podiums': 'podiums',
+    'results.track': 'Piste',
+    'results.races': 'Courses',
+    'results.uniqueThemes': 'Thèmes Uniques',
+    'results.players': 'Joueurs',
+    'results.totalTracks': 'Pistes Totales'
   }
 };
