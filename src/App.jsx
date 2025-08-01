@@ -15,8 +15,8 @@ function App() {
     currentRaceIndex: 0
   });
 
-  const handleStartSession = ({ raceCount, players }) => {
-    const selectedRaces = generateRaceSelection(raceCount);
+  const handleStartSession = ({ raceCount, players, rainbowRoadLast, excludedTracks }) => {
+    const selectedRaces = generateRaceSelection(raceCount, rainbowRoadLast, excludedTracks);
     const newSessionData = {
       races: selectedRaces,
       players: players.map(name => ({

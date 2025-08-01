@@ -3,29 +3,50 @@ import { circuits } from '../data/circuits.js';
 /**
  * Generates a random race selection for a session
  * @param {number} raceCount - Number of races (3, 4, 5, 6, 8, 12, 16, 32)
+ * @param {boolean} rainbowRoadLast - Whether to make Rainbow Road the last race
+ * @param {Array} excludedTracks - Array of track IDs to exclude from selection
  * @returns {Array} Array of selected circuits
  */
-export function generateRaceSelection(raceCount) {
-  const availableCircuits = [...circuits];
+export function generateRaceSelection(raceCount, rainbowRoadLast = false, excludedTracks = []) {
+  // Find Rainbow Road circuit
+  const rainbowRoad = circuits.find(circuit => circuit.id === 'rainbow_road');
+  
+  // Filter out excluded tracks
+  const availableCircuits = circuits.filter(circuit => !excludedTracks.includes(circuit.id));
+  
+  // If Rainbow Road last is enabled, we need one less regular race
+  const regularRaceCount = rainbowRoadLast ? raceCount - 1 : raceCount;
+  
+  // Create pool for regular races, excluding Rainbow Road if it's set to be last
+  const regularCircuitPool = rainbowRoadLast 
+    ? availableCircuits.filter(circuit => circuit.id !== 'rainbow_road')
+    : [...availableCircuits];
+    
   const selectedRaces = [];
   const recentRaces = []; // Track last 8 races to avoid duplicates
 
-  for (let i = 0; i < raceCount; i++) {
+  // Generate regular races
+  for (let i = 0; i < regularRaceCount; i++) {
     let selectedCircuit;
     
-    if (availableCircuits.length > 0) {
+    if (regularCircuitPool.length > 0) {
       // Select from available circuits first
-      const randomIndex = Math.floor(Math.random() * availableCircuits.length);
-      selectedCircuit = availableCircuits.splice(randomIndex, 1)[0];
+      const randomIndex = Math.floor(Math.random() * regularCircuitPool.length);
+      selectedCircuit = regularCircuitPool.splice(randomIndex, 1)[0];
     } else {
       // All circuits used, select from circuits not in recent 8
-      const eligibleCircuits = circuits.filter(
-        circuit => !recentRaces.includes(circuit.id)
+      // When rainbowRoadLast is true, still exclude Rainbow Road from regular races
+      const eligibleCircuits = availableCircuits.filter(
+        circuit => !recentRaces.includes(circuit.id) && 
+                  (!rainbowRoadLast || circuit.id !== 'rainbow_road')
       );
       
       if (eligibleCircuits.length === 0) {
-        // Fallback: select any circuit
-        selectedCircuit = circuits[Math.floor(Math.random() * circuits.length)];
+        // Fallback: select any available circuit except Rainbow Road if it's set to be last
+        const fallbackCircuits = rainbowRoadLast 
+          ? availableCircuits.filter(circuit => circuit.id !== 'rainbow_road')
+          : availableCircuits;
+        selectedCircuit = fallbackCircuits[Math.floor(Math.random() * fallbackCircuits.length)];
       } else {
         selectedCircuit = eligibleCircuits[Math.floor(Math.random() * eligibleCircuits.length)];
       }
@@ -38,6 +59,11 @@ export function generateRaceSelection(raceCount) {
     if (recentRaces.length > 8) {
       recentRaces.shift();
     }
+  }
+
+  // Add Rainbow Road as the last race if the option is enabled
+  if (rainbowRoadLast && rainbowRoad) {
+    selectedRaces.push(rainbowRoad);
   }
 
   return selectedRaces;

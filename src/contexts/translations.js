@@ -17,6 +17,15 @@ export const translations = {
     'selection.with': 'with',
     'selection.players': 'player(s)',
     'selection.warning32': '⚠️ With 32 races, 2 circuits will be repeated after all 30 unique tracks are used.',
+    'selection.warning32WithRainbow': '⚠️ With 32 races, 1 circuit will be repeated after all 29 unique tracks are used (Rainbow Road will be last).',
+    'selection.rainbowRoadLast': 'Rainbow Road Last',
+    'selection.rainbowRoadLastHelp': 'Always make Rainbow Road the final race of the session.',
+    'selection.showTrackOptions': 'Show Track Exclusions',
+    'selection.hideTrackOptions': 'Hide Track Exclusions',
+    'selection.excludeTracks': 'Exclude Tracks (Optional)',
+    'selection.excludeTracksHelp': 'Uncheck tracks you want to exclude from random selection. At least 3 tracks must remain available.',
+    'selection.selectAll': 'Select All',
+    'selection.deselectAll': 'Deselect All',
     
     // World map
     'worldMap.race': 'Race',
@@ -74,6 +83,15 @@ export const translations = {
     'selection.with': 'avec',
     'selection.players': 'joueur(s)',
     'selection.warning32': '⚠️ Avec 32 courses, 2 circuits seront répétés après que les 30 circuits uniques soient utilisés.',
+    'selection.warning32WithRainbow': '⚠️ Avec 32 courses, 1 circuit sera répété après que les 29 circuits uniques soient utilisés (la Route Arc-en-ciel sera en dernier).',
+    'selection.rainbowRoadLast': 'Route Arc-en-ciel en Dernier',
+    'selection.rainbowRoadLastHelp': 'La Route Arc-en-ciel sera toujours la dernière course de la session.',
+    'selection.showTrackOptions': 'Afficher les Options de Circuits',
+    'selection.hideTrackOptions': 'Masquer les Options de Circuits',
+    'selection.excludeTracks': 'Exclure des Circuits (Optionnel)',
+    'selection.excludeTracksHelp': 'Décochez les circuits que vous souhaitez retirer de la sélection aléatoire. Au moins 3 circuits doivent rester disponibles.',
+    'selection.selectAll': 'Tout Sélectionner',
+    'selection.deselectAll': 'Tout Désélectionner',
     
     // World map
     'worldMap.race': 'Course',

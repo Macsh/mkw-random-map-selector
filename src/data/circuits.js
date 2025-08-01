@@ -14,7 +14,7 @@ export const circuits = [
   { id: 'dino_dino_jungle', nameEn: 'Dino Dino Jungle', nameFr: 'Jungle Dino Dino', x: 65, y: 89 },
   { id: 'dk_pass', nameEn: 'DK Pass', nameFr: 'Alpes DK', x: 73.5, y: 45.9 },
   { id: 'dk_spaceport', nameEn: 'DK Spaceport', nameFr: 'Spatioport DK', x: 39.4, y: 86.2 },
-  { id: 'dry_bones_burnout', nameEn: 'Dry Bones Burnout', nameFr: 'Fournaise ossesseuse', x: 38.5, y: 19.5 },
+  { id: 'dry_bones_burnout', nameEn: 'Dry Bones Burnout', nameFr: 'Fournaise osseuse', x: 38.5, y: 19.5 },
   { id: 'faraway_oasis', nameEn: 'Faraway Oasis', nameFr: 'Savane sauvage', x: 60.9, y: 70.8 },
   { id: 'great_question_block_ruins', nameEn: 'Great ? Block Ruins', nameFr: 'Bloc ? antique', x: 76.8, y: 83.5 },
   { id: 'koopa_troopa_beach', nameEn: 'Koopa Troopa Beach', nameFr: 'Plage Koopa', x: 50, y: 82.7 },

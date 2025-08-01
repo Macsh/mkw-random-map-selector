@@ -14,8 +14,12 @@ The goal was to see how far we could push the boundaries of conversational progr
 
 - **Random Circuit Selection**: Choose from all 30 Mario Kart World tracks
 - **Flexible Session Lengths**: 3, 4, 5, 6, 8, 12, 16, or 32 races
+- **Rainbow Road Last Option**: Force Rainbow Road to be the final race of any session
+- **Track Exclusions**: Selectively exclude specific tracks from random selection with visual counter
+- **Intelligent Track Management**: Rainbow Road auto-inclusion when "Rainbow Road Last" is enabled
 - **Player Management**: Track up to 4 players with tournament standings
 - **Smart Duplicate Prevention**: For 32-race sessions, prevents duplicates in the last 8 races
+- **Persistent User Preferences**: All settings (language, race count, options) saved between sessions
 - **Bilingual Support**: Toggle between English and French with flag buttons (🇺🇸/🇫🇷)
 - **Responsive Design**: 
   - Desktop: Full world map with highlighted circuits
@@ -67,11 +71,15 @@ This app is installable as a Progressive Web App:
 
 1. **Choose Language**: Toggle between English 🇺🇸 and French 🇫🇷 using the flag buttons
 2. **Select Race Count**: Choose how many races you want (3-32)
-3. **Add Players** (Optional): Enter player names for tournament tracking
-4. **Start Session**: Begin your random circuit selection
-5. **Race Progress**: View each selected circuit on the world map
-6. **Enter Results**: Record player positions after each race (if players added)
-7. **View Results**: See final standings and complete race history
+3. **Rainbow Road Option**: Enable "Rainbow Road Last" to guarantee it as your final race
+4. **Customize Track Pool**: Use "Track Exclusions" to remove unwanted circuits (shows X/30 counter)
+5. **Add Players** (Optional): Enter player names for tournament tracking
+6. **Start Session**: Begin your random circuit selection
+7. **Race Progress**: View each selected circuit on the world map
+8. **Enter Results**: Record player positions after each race (if players added)
+9. **View Results**: See final standings and complete race history
+
+**💡 Pro Tip**: All your preferences (language, settings, exclusions) are automatically saved for your next session!
 
 ## 🗺️ Map Integration
 
@@ -123,11 +131,15 @@ This project demonstrates **"vibe coding"** - an experimental development method
 
 The result is a fully functional PWA built entirely through AI-assisted development, showcasing the potential of modern AI tools in creating production-ready applications.
 
-## 🎯 Roadmap
+## 🚀 Recent Updates
 
-- [x] ~~Add actual Mario Kart World map integration~~
-- [x] ~~Implement player position input modal~~
-- [x] ~~Add sound effects and animations~~
+### v2.0 - Enhanced User Experience
+- **🌈 Rainbow Road Last**: New option to guarantee Rainbow Road as the final race
+- **🎯 Track Exclusions**: Granular control over which circuits can be selected
+- **💾 Persistent Settings**: All preferences now saved automatically between sessions
+- **🎨 Smart UI**: Track counter shows available circuits (e.g., "28/30")
+- **🔒 Intelligent Constraints**: Rainbow Road auto-management when set as final race
+- **🌍 Improved French Translations**: More natural language throughout the interface
 
 ## 🤝 Contributing
 
