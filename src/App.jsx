@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SelectionScreen from './components/SelectionScreen/SelectionScreen.jsx';
 import RaceScreen from './components/RaceScreen/RaceScreen.jsx';
 import Results from './components/Results/Results.jsx';
@@ -13,6 +13,11 @@ function App() {
     raceResults: [],
     currentRaceIndex: 0
   });
+
+  // Each screen and each race starts at the top of the page
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [gameState, sessionData.currentRaceIndex]);
 
   const handleStartSession = ({ raceCount, players, rainbowRoadLast, excludedTracks }) => {
     const selectedRaces = generateRaceSelection(raceCount, rainbowRoadLast, excludedTracks);
