@@ -35,7 +35,12 @@ function Standings({ players, races, raceIndex, totalRaces, onEditRace, hint }) 
                     key={index}
                     type="button"
                     className={index === raceIndex ? 'chip chip--now' : 'chip'}
-                    aria-label={t('race.editRace', { number: index + 1, course: getCircuitName(races[index], language) })}
+                    aria-label={t('race.editResult', {
+                      player: standing.name,
+                      number: index + 1,
+                      course: getCircuitName(races[index], language),
+                      position: position || '?',
+                    })}
                     onClick={() => onEditRace(index)}
                   >
                     {position || '?'}
