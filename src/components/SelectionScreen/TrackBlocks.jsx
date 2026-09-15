@@ -1,7 +1,7 @@
 import { useLanguage } from '../../contexts/useLanguage.js';
 import { COURSE_GROUPS, getCircuitsByGroup, getCircuitName, getParentCircuit } from '../../data/circuits.js';
 import { sortByName } from '../../utils/format.js';
-import { groupState, isLocked, setCourseIncluded, setGroupIncluded } from '../../utils/trackSelection.js';
+import { MIN_POOL, groupState, isLocked, setCourseIncluded, setGroupIncluded } from '../../utils/trackSelection.js';
 import Icon from '../ui/Icon.jsx';
 
 const GROUP_COPY = {
@@ -84,7 +84,7 @@ function TrackBlocks({ excludedTracks, rainbowRoadLast, onChange }) {
           </section>
         );
       })}
-      <p className="muted track-blocks__help">{t('home.coursesHelp')}</p>
+      <p className="muted track-blocks__help">{t('home.coursesHelp', { min: MIN_POOL })}</p>
     </div>
   );
 }
