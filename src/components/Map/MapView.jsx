@@ -7,6 +7,7 @@ import {
   MAP_ASPECT,
   RAINBOW_ICON,
   SPOTLIGHT_DIM,
+  DISCREET_ROUTE_AFTER_RACES,
   zoomStackStyle,
   spotlightMask,
   groupRouteStops,
@@ -89,9 +90,13 @@ export function SessionRouteMap({ spots, className = '' }) {
 
   return (
     <MapView spots={stops.map((stop) => stop.spot)} effect="spotlight" spotlight={{ inner: 4, outer: 10.5 }} dim className={className}>
-      <svg className="map-route" viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`} aria-hidden="true">
-        <polyline points={points} fill="none" stroke="#16172B" strokeWidth="40" strokeDasharray="1 70" strokeLinecap="round" strokeLinejoin="round" />
-        <polyline points={points} fill="none" stroke="#FFC83D" strokeWidth="22" strokeDasharray="1 70" strokeLinecap="round" strokeLinejoin="round" />
+      <svg
+        className={spots.length > DISCREET_ROUTE_AFTER_RACES ? 'map-route map-route--discreet' : 'map-route'}
+        viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
+        aria-hidden="true"
+      >
+        <polyline className="map-route__outline" points={points} fill="none" stroke="#16172B" strokeWidth="40" strokeDasharray="1 70" strokeLinecap="round" strokeLinejoin="round" />
+        <polyline className="map-route__line" points={points} fill="none" stroke="#FFC83D" strokeWidth="22" strokeDasharray="1 70" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
       {stops.map((stop) => (
         <span key={stop.numbers.join('-')} className="map-stop display num" style={at(stop.spot)}>

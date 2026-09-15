@@ -7,6 +7,9 @@ export const RAINBOW_ICON = { x: 49.9, y: 70.5, width: 10.8 };
 
 export const SPOTLIGHT_DIM = 'rgba(6, 8, 28, 0.62)';
 
+// Past this many races the session route is drawn thin and faded, so the numbered stops stay readable
+export const DISCREET_ROUTE_AFTER_RACES = 8;
+
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 const round = (value) => Math.round(value * 1000) / 1000 + 0; // + 0 turns -0 into 0
 const percent = (value) => `${round(value)}%`;

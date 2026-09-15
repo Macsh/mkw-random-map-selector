@@ -72,6 +72,12 @@
   overflow: visible;
   pointer-events: none;
 }
+/* Long sessions: a thinner, faded route recedes behind the numbered stops.
+   CSS stroke-width overrides the polylines' presentation attributes (px = viewBox units here). */
+.map-route--discreet { opacity: 0.45; }
+.map-route--discreet .map-route__outline { stroke-width: 24px; }
+.map-route--discreet .map-route__line { stroke-width: 12px; }
+
 .map-stop {
   --stop-size: clamp(22px, 5cqw, 34px);
   position: absolute;
