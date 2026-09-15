@@ -190,7 +190,7 @@ function RaceScreen({ currentRace, races, raceIndex, totalRaces, players, onNext
             </h1>
           </div>
           <div className="sticker race-desktop__zoom">
-            <MapView spot={spot} effect="spotlight" dim zoom={4} aspect={zoomAspect} />
+            <MapView spot={spot} effect="glow" zoom={4} aspect={zoomAspect} />
           </div>
           {snes && <SnesTrack circuit={currentRace} variant="card" />}
           {actions}
