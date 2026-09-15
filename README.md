@@ -26,7 +26,7 @@ The goal was to see how far we could push the boundaries of conversational progr
   - Desktop: Full world map with a spotlight and a pin on the drawn course, plus a separate zoomed card
   - Mobile: Zoomed circuit view + a mini-map with a dot
 - **No-Player-Names Flow**: Without players, races and results show a route recap instead of standings
-- **Positions Sheet**: Enter or edit a race's finishing positions from a dedicated sheet, including past races
+- **Positions Sheet**: Enter or edit a race's finishing positions from a dedicated sheet; its previous/next arrows reach any race played so far, saving the entries on the way
 - **Offline Support**: Works without internet connection (PWA)
 - **Tournament Tracking**: Points system with final standings and race history
 
@@ -79,7 +79,7 @@ This app is installable as a Progressive Web App:
 5. **Add Players** (Optional): Enter player names for tournament tracking
 6. **Start Session**: Begin your random circuit selection
 7. **Race Progress**: View each selected circuit on the world map
-8. **Enter Results**: Without player names, the session ends on a route recap of every course played; with names, you enter each race's finishing positions in a positions sheet, editable from any previous race
+8. **Enter Results**: Without player names, the session ends on a route recap of every course played; with names, you enter each race's finishing positions in a positions sheet; tap a box in the standings, or use the sheet's previous/next arrows, to edit any race played so far
 9. **View Results**: See final standings and complete race history (with players), or the route recap (without)
 
 **💡 Pro Tip**: All your preferences (language, settings, exclusions) are automatically saved for your next session!

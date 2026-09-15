@@ -143,7 +143,22 @@
   color: var(--text);
 }
 .sheet__grabber { align-self: center; width: 48px; height: 5px; border-radius: 3px; background: var(--rule); }
-.sheet__head { display: flex; flex-direction: column; gap: 6px; }
+.sheet__head { display: flex; align-items: center; gap: 12px; }
+.sheet__heading { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.sheet__nav { display: flex; flex: none; gap: 8px; }
+.sheet__nav-btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 3px solid var(--outline);
+  border-radius: 12px;
+  background: var(--surface-2);
+  color: var(--text);
+}
+.sheet__nav-btn:disabled { opacity: 0.4; cursor: default; }
 .sheet__title { font-size: 30px; }
 .sheet__rows { margin: 0; padding: 0; list-style: none; }
 .sheet__row { display: flex; align-items: center; gap: 12px; min-height: 64px; }

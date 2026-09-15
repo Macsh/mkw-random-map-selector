@@ -1,5 +1,6 @@
 // Stroke icons on a 24px grid; `play` is filled
 const STROKE_PATHS = {
+  chevronLeft: 'M15 5l-7 7 7 7',
   chevronRight: 'M9 5l7 7-7 7',
   chevronDown: 'M5 9l7 7 7-7',
   podium: 'M3 20h18M5 20v-7h4.5v7M9.5 20V6h5v14M14.5 20v-4.5H19V20',

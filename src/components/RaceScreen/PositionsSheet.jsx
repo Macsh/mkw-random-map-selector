@@ -7,7 +7,8 @@ import { PlayerDot } from '../ui/Badges.jsx';
 const MAX_POSITION = 24;
 
 // Bottom sheet (centred dialog on desktop). Positions are optional; duplicates block saving.
-function PositionsSheet({ raceNumber, courseName, players, initialPositions, onCancel, onSave }) {
+// Previous/next buttons move between races 0..lastRaceIndex, saving the valid entries first.
+function PositionsSheet({ raceIndex, lastRaceIndex, courseName, players, initialPositions, onCancel, onSave, onNavigate }) {
   const { t, language } = useLanguage();
   const [values, setValues] = useState(() => initialPositions.map((position) => (position ? String(position) : '')));
 
@@ -23,6 +24,7 @@ function PositionsSheet({ raceNumber, courseName, players, initialPositions, onC
   const entered = numbers.filter((number) => number !== null);
   const invalid = entered.some((number) => !Number.isInteger(number) || number < 1 || number > MAX_POSITION);
   const duplicate = new Set(entered).size !== entered.length;
+  const blocked = duplicate || invalid;
 
   const setValue = (index, value) => {
     setValues((previous) => previous.map((current, i) => (i === index ? value : current)));
@@ -41,8 +43,30 @@ function PositionsSheet({ raceNumber, courseName, players, initialPositions, onC
       <div className="sheet" role="dialog" aria-modal="true" aria-labelledby="positions-sheet-title" onClick={(event) => event.stopPropagation()}>
         <div className="sheet__grabber" aria-hidden="true" />
         <div className="sheet__head">
-          <span className="label">{t('sheet.subtitle', { number: raceNumber, course: courseName })}</span>
-          <h2 id="positions-sheet-title" className="display sheet__title">{t('sheet.title')}</h2>
+          <div className="sheet__heading">
+            <span className="label">{t('sheet.subtitle', { number: raceIndex + 1, course: courseName })}</span>
+            <h2 id="positions-sheet-title" className="display sheet__title">{t('sheet.title')}</h2>
+          </div>
+          <div className="sheet__nav">
+            <button
+              type="button"
+              className="sheet__nav-btn"
+              aria-label={t('sheet.previousRace')}
+              disabled={blocked || raceIndex <= 0}
+              onClick={() => onNavigate(raceIndex - 1, numbers)}
+            >
+              <Icon name="chevronLeft" />
+            </button>
+            <button
+              type="button"
+              className="sheet__nav-btn"
+              aria-label={t('sheet.nextRace')}
+              disabled={blocked || raceIndex >= lastRaceIndex}
+              onClick={() => onNavigate(raceIndex + 1, numbers)}
+            >
+              <Icon name="chevronRight" />
+            </button>
+          </div>
         </div>
 
         <ul className="sheet__rows">
@@ -96,7 +120,7 @@ function PositionsSheet({ raceNumber, courseName, players, initialPositions, onC
 
         <div className="sheet__actions">
           <button type="button" className="btn" onClick={onCancel}>{t('sheet.cancel')}</button>
-          <button type="button" className="btn btn--primary" disabled={duplicate || invalid} onClick={() => onSave(numbers)}>
+          <button type="button" className="btn btn--primary" disabled={blocked} onClick={() => onSave(numbers)}>
             {t('sheet.save')}
             <Icon name="check" />
           </button>

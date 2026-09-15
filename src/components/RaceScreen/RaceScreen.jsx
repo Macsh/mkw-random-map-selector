@@ -103,7 +103,8 @@ function RaceScreen({ currentRace, races, raceIndex, totalRaces, players, onNext
   const sheet = editingRaceIndex !== null && (
     <PositionsSheet
       key={editingRaceIndex}
-      raceNumber={editingRaceIndex + 1}
+      raceIndex={editingRaceIndex}
+      lastRaceIndex={raceIndex}
       courseName={getCircuitName(races[editingRaceIndex], language)}
       players={players}
       initialPositions={players.map((player) => player.positions[editingRaceIndex] ?? null)}
@@ -111,6 +112,10 @@ function RaceScreen({ currentRace, races, raceIndex, totalRaces, players, onNext
       onSave={(positions) => {
         onPositionsEntered(positions, editingRaceIndex);
         closeSheet();
+      }}
+      onNavigate={(targetIndex, positions) => {
+        onPositionsEntered(positions, editingRaceIndex);
+        setEditingRaceIndex(targetIndex);
       }}
     />
   );
