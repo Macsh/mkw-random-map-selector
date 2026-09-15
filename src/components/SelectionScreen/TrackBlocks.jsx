@@ -1,5 +1,5 @@
 import { useLanguage } from '../../contexts/useLanguage.js';
-import { COURSE_GROUPS, getCircuitsByGroup, getCircuitName, getParentCircuit } from '../../data/circuits.js';
+import { getCircuitsByGroup, getCircuitName, getParentCircuit } from '../../data/circuits.js';
 import { sortByName } from '../../utils/format.js';
 import { MIN_POOL, groupState, isLocked, setCourseIncluded, setGroupIncluded } from '../../utils/trackSelection.js';
 import Icon from '../ui/Icon.jsx';
@@ -8,6 +8,9 @@ const GROUP_COPY = {
   world: { title: 'home.groupWorld', hint: 'home.groupWorldHint' },
   snes: { title: 'home.groupSnes', hint: 'home.groupSnesHint' },
 };
+
+// Display order only: SNES first, the newest and shortest block, quick to switch off
+const BLOCK_ORDER = ['snes', 'world'];
 
 const CHECK_ICONS = { on: 'check', mixed: 'dash', locked: 'lock' };
 
@@ -27,7 +30,7 @@ function TrackBlocks({ excludedTracks, rainbowRoadLast, onChange }) {
 
   return (
     <div className="track-blocks">
-      {COURSE_GROUPS.map((group) => {
+      {BLOCK_ORDER.map((group) => {
         const courses = sortByName(getCircuitsByGroup(group), language);
         const ids = courses.map((course) => course.id);
         const state = groupState(excludedTracks, ids, rainbowRoadLast);

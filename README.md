@@ -76,7 +76,7 @@ This app is installable as a Progressive Web App:
 1. **Choose Language**: Toggle between English and French using the EN/FR buttons
 2. **Select Race Count**: Choose how many races you want (3-32)
 3. **Rainbow Road Option**: Enable "Rainbow Road Last" to guarantee it as your final race
-4. **Customize Track Pool**: Open "Courses" to see a selected/total counter (40 by default) and two blocks — World (30) and SNES (10) — each with its own select-all and per-course toggles
+4. **Customize Track Pool**: Open "Courses" to see a selected/total counter (40 by default) and two blocks — SNES (10) first, then World (30) — each with its own select-all and per-course toggles
 5. **Add Players** (Optional): Enter player names for tournament tracking
 6. **Start Session**: Begin your random circuit selection
 7. **Race Progress**: View each selected circuit on the world map
