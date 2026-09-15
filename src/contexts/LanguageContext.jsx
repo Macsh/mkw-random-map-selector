@@ -4,9 +4,14 @@ import { translations } from './translations.js';
 import { loadSettings, updateSetting } from '../utils/settings.js';
 import { interpolate } from '../utils/format.js';
 
+const SUPPORTED_LANGUAGES = ['en', 'fr'];
+
 export function LanguageProvider({ children }) {
   // Read the saved language before the first render so the UI never flashes in English
-  const [language, setLanguage] = useState(() => loadSettings().language);
+  const [language, setLanguage] = useState(() => {
+    const saved = loadSettings().language;
+    return SUPPORTED_LANGUAGES.includes(saved) ? saved : 'en';
+  });
 
   useEffect(() => {
     document.documentElement.lang = language;
@@ -19,7 +24,7 @@ export function LanguageProvider({ children }) {
   };
 
   const t = useCallback((key, vars) => {
-    const table = translations[language];
+    const table = translations[language] ?? translations.en;
     let template = table[key];
     if (vars && typeof vars.count === 'number') {
       template = table[`${key}_${vars.count === 1 ? 'one' : 'other'}`] ?? template;
