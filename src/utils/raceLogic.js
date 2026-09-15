@@ -18,9 +18,10 @@ export function generateRaceSelection(raceCount, rainbowRoadLast = false, exclud
   const regularRaceCount = rainbowRoadLast ? raceCount - 1 : raceCount;
 
   // Create pool for regular races, excluding Rainbow Road if it's set to be last
-  const regularCircuitPool = rainbowRoadLast
+  const regularCircuits = rainbowRoadLast
     ? availableCircuits.filter(circuit => circuit.id !== RAINBOW_ROAD_ID)
-    : [...availableCircuits];
+    : availableCircuits;
+  const regularCircuitPool = [...regularCircuits];
     
   const selectedRaces = [];
   const recentRaces = []; // Track last 8 races to avoid duplicates
@@ -42,10 +43,11 @@ export function generateRaceSelection(raceCount, rainbowRoadLast = false, exclud
       );
 
       if (eligibleCircuits.length === 0) {
-        // Fallback: select any available circuit except Rainbow Road if it's set to be last
-        const fallbackCircuits = rainbowRoadLast
-          ? availableCircuits.filter(circuit => circuit.id !== RAINBOW_ROAD_ID)
-          : availableCircuits;
+        // Small pool: avoid as many recent races as the pool allows (at most pool - 1), so the
+        // previous race is always avoided and a course never comes twice in a row
+        const avoidCount = Math.min(8, regularCircuits.length - 1);
+        const avoided = recentRaces.slice(recentRaces.length - avoidCount);
+        const fallbackCircuits = regularCircuits.filter(circuit => !avoided.includes(circuit.id));
         selectedCircuit = fallbackCircuits[Math.floor(Math.random() * fallbackCircuits.length)];
       } else {
         selectedCircuit = eligibleCircuits[Math.floor(Math.random() * eligibleCircuits.length)];

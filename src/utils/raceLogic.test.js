@@ -53,6 +53,22 @@ describe('generateRaceSelection', () => {
     }
   });
 
+  it('never draws the same course twice in a row once a small pool is used up (pool of 3)', () => {
+    const kept = allIds.slice(0, 3);
+    const noBackToBack = (races) => races.slice(1).forEach((id, i) => expect(id).not.toBe(races[i]));
+    for (let run = 0; run < 20; run++) {
+      const races = ids(generateRaceSelection(12, false, allIds.filter((id) => !kept.includes(id))));
+      expect(races).toHaveLength(12);
+      noBackToBack(races);
+
+      // with Rainbow Road last, the pool of 3 is the regular courses only
+      const withRainbow = ids(generateRaceSelection(12, true, allIds.filter((id) => ![...kept, RAINBOW_ROAD_ID].includes(id))));
+      expect(withRainbow).toHaveLength(12);
+      expect(withRainbow.slice(0, 11).every((id) => kept.includes(id))).toBe(true);
+      noBackToBack(withRainbow);
+    }
+  });
+
   it('still returns a full session from a pool of 3', () => {
     const kept = allIds.slice(0, 3);
     const excluded = allIds.filter((id) => !kept.includes(id));
