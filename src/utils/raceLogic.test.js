@@ -69,6 +69,16 @@ describe('generateRaceSelection', () => {
     }
   });
 
+  it('keeps the order random once a small pool is used up (pool of 4, 16 races)', () => {
+    const kept = allIds.slice(0, 4);
+    const excluded = allIds.filter((id) => !kept.includes(id));
+    // A fixed order would replay the same 4-race cycle for the whole session
+    const cycleOrders = (races) => new Set([0, 4, 8, 12].map((start) => races.slice(start, start + 4).join()));
+    const draws = Array.from({ length: 20 }, () => ids(generateRaceSelection(16, false, excluded)));
+    draws.forEach((races) => expect(races.every((id) => kept.includes(id))).toBe(true));
+    expect(draws.some((races) => cycleOrders(races).size >= 2)).toBe(true);
+  });
+
   it('still returns a full session from a pool of 3', () => {
     const kept = allIds.slice(0, 3);
     const excluded = allIds.filter((id) => !kept.includes(id));

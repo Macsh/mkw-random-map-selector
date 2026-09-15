@@ -43,9 +43,10 @@ export function generateRaceSelection(raceCount, rainbowRoadLast = false, exclud
       );
 
       if (eligibleCircuits.length === 0) {
-        // Small pool: avoid as many recent races as the pool allows (at most pool - 1), so the
-        // previous race is always avoided and a course never comes twice in a row
-        const avoidCount = Math.min(8, regularCircuits.length - 1);
+        // Small pool: avoid only the last half-pool races (at least the previous one), so a course
+        // never comes twice in a row and several courses stay possible (pool - 1 would fix the order)
+        const halfPool = Math.max(1, Math.floor(regularCircuits.length / 2));
+        const avoidCount = Math.min(halfPool, regularCircuits.length - 1); // a one-course pool can only repeat
         const avoided = recentRaces.slice(recentRaces.length - avoidCount);
         const fallbackCircuits = regularCircuits.filter(circuit => !avoided.includes(circuit.id));
         selectedCircuit = fallbackCircuits[Math.floor(Math.random() * fallbackCircuits.length)];
