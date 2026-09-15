@@ -136,3 +136,13 @@ export function isValidRaceCount(count) {
   const validCounts = [3, 4, 5, 6, 8, 12, 16, 32];
   return validCounts.includes(count);
 }
+
+/**
+ * Races shown as chips in the live standings: up to 3 previous races, the current one,
+ * then upcoming races while there is room (4 chips at most). Indices are inclusive.
+ */
+export function standingsWindow(raceIndex, totalRaces) {
+  const start = Math.max(0, raceIndex - 3);
+  const end = Math.min(totalRaces - 1, Math.max(raceIndex, start + 3));
+  return { start, end };
+}

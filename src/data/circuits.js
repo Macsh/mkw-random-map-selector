@@ -71,38 +71,3 @@ export const getMapSpot = (circuit) => {
 };
 
 export const getCircuitsByGroup = (group) => circuits.filter((circuit) => circuit.group === group);
-
-// Since Mario Kart World doesn't use traditional cups for VS mode,
-// we'll use themed colors for visual variety
-export const trackThemes = {
-  'acorn_heights': '#8B4513',        // Brown (forest)
-  'airship_fortress': '#708090',     // Gray (metal)
-  'boo_cinema': '#4B0082',          // Purple (spooky)
-  'bowsers_castle': '#8B0000',      // Dark red (fire)
-  'cheep_cheep_falls': '#00CED1',   // Turquoise (water)
-  'choco_mountain': '#D2691E',      // Chocolate brown
-  'crown_city': '#FFD700',          // Gold (royal)
-  'dandelion_depths': '#FFFF00',    // Yellow (flowers)
-  'desert_hills': '#F4A460',        // Sandy brown
-  'dino_dino_jungle': '#228B22',    // Forest green
-  'dk_pass': '#2F4F4F',            // Dark slate gray (mountain)
-  'dk_spaceport': '#191970',        // Midnight blue (space)
-  'dry_bones_burnout': '#BC8F8F',   // Rosy brown (bone)
-  'faraway_oasis': '#40E0D0',       // Turquoise (oasis)
-  'great_question_block_ruins': '#FFA500', // Orange (? block)
-  'koopa_troopa_beach': '#87CEEB',  // Sky blue (beach)
-  'mario_bros_circuit': '#FF0000',  // Red (Mario)
-  'mario_circuit': '#FF0000',       // Red (Mario)
-  'moo_moo_meadows': '#90EE90',     // Light green (grass)
-  'peach_beach': '#FFB6C1',         // Light pink (Peach)
-  'peach_stadium': '#FF69B4',       // Hot pink (Peach)
-  'rainbow_road': '#9932CC',        // Purple (rainbow)
-  'salty_salty_speedway': '#1E90FF', // Dodger blue (salt/ocean)
-  'shy_guy_bazaar': '#DDA0DD',      // Plum (bazaar)
-  'sky_high_sundae': '#FFE4E1',     // Misty rose (ice cream)
-  'starview_peak': '#4169E1',       // Royal blue (mountain peak)
-  'toads_factory': '#696969',       // Dim gray (industrial)
-  'wario_stadium': '#DAA520',       // Goldenrod (Wario)
-  'warios_galleon': '#8B4513',      // Saddle brown (ship)
-  'whistlestop_summit': '#B0C4DE'   // Light steel blue (summit)
-};

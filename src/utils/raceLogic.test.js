@@ -6,6 +6,7 @@ import {
   calculateStandings,
   countRepeats,
   isPerfectTie,
+  standingsWindow,
 } from './raceLogic.js';
 
 const ids = (races) => races.map((r) => r.id);
@@ -103,5 +104,15 @@ describe('countRepeats', () => {
     expect(countRepeats(4, 40, false)).toBe(0);
     expect(countRepeats(32, 30, false)).toBe(2);
     expect(countRepeats(8, 5, true)).toBe(3);
+  });
+});
+
+describe('standingsWindow', () => {
+  it('shows up to 3 previous races, the current one, and upcoming races to fill 4 chips', () => {
+    expect(standingsWindow(0, 4)).toEqual({ start: 0, end: 3 });
+    expect(standingsWindow(2, 4)).toEqual({ start: 0, end: 3 });
+    expect(standingsWindow(10, 32)).toEqual({ start: 7, end: 10 });
+    expect(standingsWindow(0, 3)).toEqual({ start: 0, end: 2 });
+    expect(standingsWindow(31, 32)).toEqual({ start: 28, end: 31 });
   });
 });

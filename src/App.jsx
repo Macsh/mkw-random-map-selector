@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import SelectionScreen from './components/SelectionScreen/SelectionScreen.jsx';
-import WorldMap from './components/WorldMap/WorldMap.jsx';
+import RaceScreen from './components/RaceScreen/RaceScreen.jsx';
 import Results from './components/Results/Results.jsx';
 import { generateRaceSelection } from './utils/raceLogic.js';
 import { LanguageProvider } from './contexts/LanguageContext.jsx';
@@ -94,7 +94,7 @@ function App() {
         )}
         
         {gameState === 'racing' && (
-          <WorldMap
+          <RaceScreen
             currentRace={sessionData.races[sessionData.currentRaceIndex]}
             races={sessionData.races}
             raceIndex={sessionData.currentRaceIndex}
