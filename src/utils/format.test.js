@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { interpolate, formatOrdinal, sortByName, formatRaceNumbers, longestWordLength } from './format.js';
+import { interpolate, formatOrdinal, sortByName, raceNumberRows, longestWordLength } from './format.js';
 
 describe('interpolate', () => {
   it('replaces known placeholders and keeps unknown ones', () => {
@@ -37,11 +37,17 @@ describe('sortByName', () => {
   });
 });
 
-describe('formatRaceNumbers', () => {
-  it('joins up to three race numbers and shortens longer lists', () => {
-    expect(formatRaceNumbers([3])).toBe('3');
-    expect(formatRaceNumbers([2, 5, 9])).toBe('2·5·9');
-    expect(formatRaceNumbers([2, 5, 9, 12])).toBe('2·5…');
+describe('raceNumberRows', () => {
+  it('keeps every race number, three per row', () => {
+    expect(raceNumberRows([3])).toEqual(['3']);
+    expect(raceNumberRows([2, 5, 9])).toEqual(['2·5·9']);
+    expect(raceNumberRows([10, 13, 15, 20])).toEqual(['10·13·15', '20']);
+    expect(raceNumberRows([1, 2, 3, 4, 5, 6, 7])).toEqual(['1·2·3', '4·5·6', '7']);
+  });
+
+  it('accepts another row length and an empty list', () => {
+    expect(raceNumberRows([1, 2, 3, 4], 2)).toEqual(['1·2', '3·4']);
+    expect(raceNumberRows([])).toEqual([]);
   });
 });
 

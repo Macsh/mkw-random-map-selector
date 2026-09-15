@@ -12,7 +12,7 @@ import {
   groupRouteStops,
   routePolyline,
 } from '../../utils/mapGeometry.js';
-import { formatRaceNumbers } from '../../utils/format.js';
+import { raceNumberRows } from '../../utils/format.js';
 import './Map.css';
 
 const CENTER = { x: 50, y: 50 };
@@ -95,7 +95,9 @@ export function SessionRouteMap({ spots, className = '' }) {
       </svg>
       {stops.map((stop) => (
         <span key={stop.numbers.join('-')} className="map-stop display num" style={at(stop.spot)}>
-          {formatRaceNumbers(stop.numbers)}
+          {raceNumberRows(stop.numbers).map((row) => (
+            <span key={row} className="map-stop__row">{row}</span>
+          ))}
         </span>
       ))}
     </MapView>

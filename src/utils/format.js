@@ -14,8 +14,10 @@ export const formatOrdinal = (n, language) => {
 export const sortByName = (circuits, language) =>
   [...circuits].sort((a, b) => getCircuitName(a, language).localeCompare(getCircuitName(b, language), language));
 
-export const formatRaceNumbers = (numbers) =>
-  numbers.length <= 3 ? numbers.join('·') : `${numbers.slice(0, 2).join('·')}…`;
+// Every race number of one route stop, `perRow` per row: [10, 13, 15, 20] → ['10·13·15', '20']
+export const raceNumberRows = (numbers, perRow = 3) =>
+  Array.from({ length: Math.ceil(numbers.length / perRow) }, (_, row) =>
+    numbers.slice(row * perRow, (row + 1) * perRow).join('·'));
 
 // Breaking whitespace only: a no-break space (U+00A0, U+202F) keeps its neighbours on one line
 const BREAKING_SPACE = /[^\S\u{A0}\u{202F}]+/u;

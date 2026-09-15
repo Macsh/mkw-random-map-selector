@@ -76,20 +76,25 @@
   --stop-size: clamp(22px, 5cqw, 34px);
   position: absolute;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-width: var(--stop-size);
-  height: var(--stop-size);
-  padding: 0 6px;
+  min-height: var(--stop-size);
+  padding: 2px 6px;
   border: 3px solid var(--ink);
-  border-radius: 999px;
+  /* a pill on one row, a rounded rectangle once the numbers wrap onto more rows */
+  border-radius: calc(var(--stop-size) / 2);
   background: #E62B1E;
   color: #FFFFFF;
   box-shadow: 2px 2px 0 var(--ink);
   font-size: calc(var(--stop-size) * 0.5);
+  text-align: center;
   white-space: nowrap;
+  /* centred on the lifted anchor whatever the number of rows */
   transform: translate(-50%, calc(-50% - clamp(16px, 4.4cqw, 30px)));
 }
+.map-stop__row { line-height: 1; }
 
 .map-mini {
   position: relative;
