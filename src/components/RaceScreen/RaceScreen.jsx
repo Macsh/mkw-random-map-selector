@@ -120,40 +120,35 @@ function RaceScreen({ currentRace, races, raceIndex, totalRaces, players, onNext
     />
   );
 
-  if (isMobile) {
-    return (
-      <div className="race">
-        <div className="checker" />
-        <main className="race__body">
-          <div className="race__top">
-            <RaceTitle raceIndex={raceIndex} totalRaces={totalRaces} />
-            <LanguageToggle />
-          </div>
-          <RaceProgress raceIndex={raceIndex} totalRaces={totalRaces} />
-
-          <div className={snes ? 'race-zoom race-zoom--snes' : 'race-zoom'}>
-            <div className="sticker race-zoom__card">
-              <MapView spot={spot} effect="glow" zoom={4} />
-              <MiniMap spot={spot} className="race-zoom__mini" />
-            </div>
-            <h1 className="sticker fit-title race-zoom__banner" style={titleStyle}>
-              {snes && <SnesBadge />}
-              <span className="display">{title}</span>
-            </h1>
-          </div>
-
-          {snes && <SnesTrack circuit={currentRace} variant="row" />}
-          {actions}
-          {standings}
-        </main>
-        {sheet}
-      </div>
-    );
-  }
-
   const zoomAspect = snes ? SIDE_CARD_WIDTH / 170 : hasPlayers ? SIDE_CARD_WIDTH / 200 : 1;
 
-  return (
+  const layout = isMobile ? (
+    <div className="race">
+      <div className="checker" />
+      <main className="race__body">
+        <div className="race__top">
+          <RaceTitle raceIndex={raceIndex} totalRaces={totalRaces} />
+          <LanguageToggle />
+        </div>
+        <RaceProgress raceIndex={raceIndex} totalRaces={totalRaces} />
+
+        <div className={snes ? 'race-zoom race-zoom--snes' : 'race-zoom'}>
+          <div className="sticker race-zoom__card">
+            <MapView spot={spot} effect="glow" zoom={4} />
+            <MiniMap spot={spot} className="race-zoom__mini" />
+          </div>
+          <h1 className="sticker fit-title race-zoom__banner" style={titleStyle}>
+            {snes && <SnesBadge />}
+            <span className="display">{title}</span>
+          </h1>
+        </div>
+
+        {snes && <SnesTrack circuit={currentRace} variant="row" />}
+        {actions}
+        {standings}
+      </main>
+    </div>
+  ) : (
     <div className="race race--desktop">
       <div className="checker" />
       <header className="race-header">
@@ -184,8 +179,15 @@ function RaceScreen({ currentRace, races, raceIndex, totalRaces, players, onNext
           {standings}
         </aside>
       </main>
-      {sheet}
     </div>
+  );
+
+  // The sheet keeps the same place in the tree, so crossing the breakpoint does not remount it
+  return (
+    <>
+      {layout}
+      {sheet}
+    </>
   );
 }
 

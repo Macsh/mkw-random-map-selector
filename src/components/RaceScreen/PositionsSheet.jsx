@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLanguage } from '../../contexts/useLanguage.js';
 import { formatOrdinal } from '../../utils/format.js';
 import Icon from '../ui/Icon.jsx';
@@ -11,6 +11,8 @@ const MAX_POSITION = 24;
 function PositionsSheet({ raceIndex, lastRaceIndex, courseName, players, initialPositions, onCancel, onSave, onNavigate }) {
   const { t, language } = useLanguage();
   const [values, setValues] = useState(() => initialPositions.map((position) => (position ? String(position) : '')));
+  // The backdrop closes the sheet only for a press that starts and ends on it (not a drag out of the sheet)
+  const pressStartedOnBackdrop = useRef(false);
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -39,8 +41,17 @@ function PositionsSheet({ raceIndex, lastRaceIndex, courseName, players, initial
   };
 
   return (
-    <div className="sheet-backdrop" onClick={onCancel}>
-      <div className="sheet" role="dialog" aria-modal="true" aria-labelledby="positions-sheet-title" onClick={(event) => event.stopPropagation()}>
+    <div
+      className="sheet-backdrop"
+      onPointerDown={(event) => {
+        pressStartedOnBackdrop.current = event.target === event.currentTarget;
+      }}
+      onClick={(event) => {
+        if (pressStartedOnBackdrop.current && event.target === event.currentTarget) onCancel();
+        pressStartedOnBackdrop.current = false;
+      }}
+    >
+      <div className="sheet" role="dialog" aria-modal="true" aria-labelledby="positions-sheet-title">
         <div className="sheet__grabber" aria-hidden="true" />
         <div className="sheet__head">
           <div className="sheet__heading">
@@ -116,6 +127,7 @@ function PositionsSheet({ raceIndex, lastRaceIndex, courseName, players, initial
           })}
         </ul>
 
+        {invalid && <p className="sheet__error" role="alert">{t('sheet.invalid')}</p>}
         {duplicate && <p className="sheet__error" role="alert">{t('sheet.duplicate')}</p>}
 
         <div className="sheet__actions">
