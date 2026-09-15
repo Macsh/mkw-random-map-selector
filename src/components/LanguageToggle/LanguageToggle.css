@@ -1,47 +1,23 @@
-.language-toggle {
+.lang-toggle {
   display: flex;
-  gap: 0.25rem;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 0.5rem;
+  flex: none;
+  border: 3px solid var(--outline);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 3px 3px 0 var(--shadow);
 }
-
-.flag-button {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  padding: 0.25rem;
-  border-radius: 4px;
-  transition: all 0.2s ease;
+.lang-toggle button {
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-width: 32px;
-  min-height: 32px;
-  backdrop-filter: blur(10px);
+  height: 38px;
+  padding: 0 12px;
+  border: 0;
+  background: var(--surface);
+  color: var(--muted);
+  font-weight: 800;
+  font-stretch: 125%;
+  font-size: 14px;
 }
-
-.flag-button:focus {
-  outline: none;
-}
-
-.flag-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.05);
-}
-
-.flag-button:hover:not(.active) {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.flag-button.active {
-  background: rgba(255, 215, 0, 0.2);
-  border-color: #FFD700;
-  box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
-  transform: scale(1.05);
-}
-
-.flag {
-  font-size: 1.1rem;
-  line-height: 1;
-}
+.lang-toggle button:focus-visible { outline-offset: -3px; } /* the group clips an outer ring */
+.lang-toggle button + button { border-left: 3px solid var(--outline); }
+.lang-toggle button[aria-pressed='true'] { background: var(--yellow); color: var(--on-yellow); font-weight: 900; }

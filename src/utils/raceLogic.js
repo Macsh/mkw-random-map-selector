@@ -1,4 +1,4 @@
-import { circuits } from '../data/circuits.js';
+import { circuits, RAINBOW_ROAD_ID } from '../data/circuits.js';
 
 /**
  * Generates a random race selection for a session
@@ -9,18 +9,19 @@ import { circuits } from '../data/circuits.js';
  */
 export function generateRaceSelection(raceCount, rainbowRoadLast = false, excludedTracks = []) {
   // Find Rainbow Road circuit
-  const rainbowRoad = circuits.find(circuit => circuit.id === 'rainbow_road');
-  
+  const rainbowRoad = circuits.find(circuit => circuit.id === RAINBOW_ROAD_ID);
+
   // Filter out excluded tracks
   const availableCircuits = circuits.filter(circuit => !excludedTracks.includes(circuit.id));
-  
+
   // If Rainbow Road last is enabled, we need one less regular race
   const regularRaceCount = rainbowRoadLast ? raceCount - 1 : raceCount;
-  
+
   // Create pool for regular races, excluding Rainbow Road if it's set to be last
-  const regularCircuitPool = rainbowRoadLast 
-    ? availableCircuits.filter(circuit => circuit.id !== 'rainbow_road')
-    : [...availableCircuits];
+  const regularCircuits = rainbowRoadLast
+    ? availableCircuits.filter(circuit => circuit.id !== RAINBOW_ROAD_ID)
+    : availableCircuits;
+  const regularCircuitPool = [...regularCircuits];
     
   const selectedRaces = [];
   const recentRaces = []; // Track last 8 races to avoid duplicates
@@ -37,15 +38,17 @@ export function generateRaceSelection(raceCount, rainbowRoadLast = false, exclud
       // All circuits used, select from circuits not in recent 8
       // When rainbowRoadLast is true, still exclude Rainbow Road from regular races
       const eligibleCircuits = availableCircuits.filter(
-        circuit => !recentRaces.includes(circuit.id) && 
-                  (!rainbowRoadLast || circuit.id !== 'rainbow_road')
+        circuit => !recentRaces.includes(circuit.id) &&
+                  (!rainbowRoadLast || circuit.id !== RAINBOW_ROAD_ID)
       );
-      
+
       if (eligibleCircuits.length === 0) {
-        // Fallback: select any available circuit except Rainbow Road if it's set to be last
-        const fallbackCircuits = rainbowRoadLast 
-          ? availableCircuits.filter(circuit => circuit.id !== 'rainbow_road')
-          : availableCircuits;
+        // Small pool: avoid only the last half-pool races (at least the previous one), so a course
+        // never comes twice in a row and several courses stay possible (pool - 1 would fix the order)
+        const halfPool = Math.max(1, Math.floor(regularCircuits.length / 2));
+        const avoidCount = Math.min(halfPool, regularCircuits.length - 1); // a one-course pool can only repeat
+        const avoided = recentRaces.slice(recentRaces.length - avoidCount);
+        const fallbackCircuits = regularCircuits.filter(circuit => !avoided.includes(circuit.id));
         selectedCircuit = fallbackCircuits[Math.floor(Math.random() * fallbackCircuits.length)];
       } else {
         selectedCircuit = eligibleCircuits[Math.floor(Math.random() * eligibleCircuits.length)];
@@ -69,68 +72,62 @@ export function generateRaceSelection(raceCount, rainbowRoadLast = false, exclud
   return selectedRaces;
 }
 
+const POINTS_BY_POSITION = [0, 15, 12, 10, 8, 7, 6, 5, 4, 3, 2, 1];
+
 /**
- * Calculates tournament standings based on race results
- * @param {Array} raceResults - Array of race results with player positions
- * @param {Array} players - Array of player names
- * @returns {Array} Sorted standings with points
+ * Points for a finishing position: 1st=15, 2nd=12, 3rd=10, 4th=8, ... 11th=1, then 0
+ * @param {number} position
+ * @returns {number}
+ */
+export function getPoints(position) {
+  return POINTS_BY_POSITION[position] ?? 0;
+}
+
+/**
+ * Calculates tournament standings from each player's positions
+ * @param {Array} raceResults - kept for API compatibility (positions are read from players)
+ * @param {Array} players - [{ name, positions: [position|null per race] }]
+ * @returns {Array} [{ index, name, points, wins, podiums, races }] sorted by points, wins, podiums
  */
 export function calculateStandings(raceResults, players) {
-  const standings = players.map(player => ({
-    name: player.name,
-    points: 0,
-    races: []
-  }));
-
-  // Points system based on Mario Kart: 1st=15, 2nd=12, 3rd=10, 4th=8, etc.
-  const getPoints = (position) => {
-    if (position === 1) return 15;
-    if (position === 2) return 12;
-    if (position === 3) return 10;
-    if (position === 4) return 8;
-    if (position === 5) return 7;
-    if (position === 6) return 6;
-    if (position === 7) return 5;
-    if (position === 8) return 4;
-    if (position === 9) return 3;
-    if (position === 10) return 2;
-    if (position === 11) return 1;
-    return 0; // 12th place and below get 0 points
-  };
-
-  // Calculate points for each player based on their race positions
-  players.forEach((player, playerIndex) => {
-    const playerStanding = standings[playerIndex];
-    
+  const standings = players.map((player, index) => {
+    const races = [];
     player.positions.forEach((position, raceIndex) => {
       if (position && position >= 1 && position <= 24) {
-        const points = getPoints(position);
-        playerStanding.points += points;
-        playerStanding.races.push({
-          raceIndex,
-          position: position,
-          points
-        });
+        races.push({ raceIndex, position, points: getPoints(position) });
       }
     });
+    return {
+      index,
+      name: player.name,
+      points: races.reduce((sum, race) => sum + race.points, 0),
+      wins: races.filter((race) => race.position === 1).length,
+      podiums: races.filter((race) => race.position <= 3).length,
+      races,
+    };
   });
 
-  // Sort by points (descending), then by best finishes
-  return standings.sort((a, b) => {
-    if (b.points !== a.points) {
-      return b.points - a.points;
-    }
-    // Tiebreaker: count wins, then podiums
-    const aWins = a.races.filter(r => r.position === 1).length;
-    const bWins = b.races.filter(r => r.position === 1).length;
-    if (bWins !== aWins) {
-      return bWins - aWins;
-    }
-    // Secondary tiebreaker: podiums
-    const aPodiums = a.races.filter(r => r.position <= 3).length;
-    const bPodiums = b.races.filter(r => r.position <= 3).length;
-    return bPodiums - aPodiums;
-  });
+  // Array.prototype.sort is stable: a perfect tie keeps player order
+  return standings.sort((a, b) => b.points - a.points || b.wins - a.wins || b.podiums - a.podiums);
+}
+
+/**
+ * Same points, wins and podiums: the order between the two players is arbitrary
+ */
+export function isPerfectTie(a, b) {
+  return a.points === b.points && a.wins === b.wins && a.podiums === b.podiums;
+}
+
+/**
+ * How many races must reuse a course because the draw pool is too small
+ * @param {number} raceCount
+ * @param {number} selectedCount - selected courses, Rainbow Road included
+ * @param {boolean} rainbowRoadLast
+ */
+export function countRepeats(raceCount, selectedCount, rainbowRoadLast) {
+  const regularRaces = rainbowRoadLast ? raceCount - 1 : raceCount;
+  const pool = rainbowRoadLast ? selectedCount - 1 : selectedCount;
+  return Math.max(0, regularRaces - pool);
 }
 
 /**
@@ -141,4 +138,14 @@ export function calculateStandings(raceResults, players) {
 export function isValidRaceCount(count) {
   const validCounts = [3, 4, 5, 6, 8, 12, 16, 32];
   return validCounts.includes(count);
+}
+
+/**
+ * Races shown as chips in the live standings: up to 3 previous races, the current one,
+ * then upcoming races while there is room (4 chips at most). Indices are inclusive.
+ */
+export function standingsWindow(raceIndex, totalRaces) {
+  const start = Math.max(0, raceIndex - 3);
+  const end = Math.min(totalRaces - 1, Math.max(raceIndex, start + 3));
+  return { start, end };
 }

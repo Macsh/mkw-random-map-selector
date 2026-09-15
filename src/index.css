@@ -1,110 +1,242 @@
-/* Mario Kart World Global Styles */
+/* Grand Prix arcade design system: tokens (light, then dark from the OS setting) + primitives */
 
 :root {
-  font-family: 'Arial', sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  color-scheme: light;
+  --bg: #FDF3DF;
+  --dots: rgba(22, 23, 43, 0.08);
+  --surface: #FFFFFF;
+  --surface-2: #FFF8EC;
+  --text: #16172B;
+  --muted: #676378;
+  --outline: #16172B;
+  --shadow: #16172B;
+  --red: #E62B1E;
+  --yellow: #FFC83D;
+  --blue: #2F6FEB;
+  --green: #1FA463;
+  --on-red: #FFFFFF;
+  --on-yellow: #16172B;
+  --chip: #F3E7CF;
+  --chip-text: #16172B;
+  --rule: #EADCC0;
+  --title-shadow: #FFC83D;
+  --scrim: rgba(22, 23, 43, 0.55);
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #001a33;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* same in both themes */
+  --ink: #16172B;
+  --ocean: #3E7DB8;
+  --ocean-dim: #19304F;
+  --silver: #CDD3E0;
+  --bronze: #E6A36B;
+  --player-1: var(--red);
+  --player-2: var(--blue);
+  --player-3: var(--yellow);
+  --player-4: var(--green);
+  --font: 'Archivo Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
-* {
-  box-sizing: border-box;
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #0D1230;
+    --dots: rgba(253, 243, 223, 0.07);
+    --surface: #1E2659;
+    --surface-2: #171E4B;
+    --text: #FDF3DF;
+    --muted: #A7ACD8;
+    --outline: #03051A;
+    --shadow: #03051A;
+    --red: #FF4A3A;
+    --yellow: #FFD04D;
+    --blue: #6B96FF;
+    --green: #3CCB7F;
+    --on-red: #FFFFFF;
+    --on-yellow: #16172B;
+    --chip: #2A3374;
+    --chip-text: #FDF3DF;
+    --rule: #2A3374;
+    --title-shadow: #E62B1E;
+    --scrim: rgba(3, 5, 26, 0.72);
+  }
 }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
-  padding: 0;
   min-width: 320px;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #001a33, #003d7a);
-  font-family: 'Arial', sans-serif;
+  min-height: 100dvh;
+  font-family: var(--font);
+  color: var(--text);
+  background-color: var(--bg);
+  background-image: radial-gradient(var(--dots) 1.3px, transparent 1.6px);
+  background-size: 18px 18px;
+  -webkit-font-smoothing: antialiased;
 }
 
-#root {
-  min-height: 100vh;
-  width: 100%;
+#root { min-height: 100dvh; }
+
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+img { max-width: 100%; }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
 }
 
-/* Accessibility */
-a {
-  color: #FFD700;
-  text-decoration: none;
+/* ---------- text ---------- */
+.display {
+  margin: 0;
+  font-stretch: 125%;
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.015em;
+  line-height: 0.92;
+  text-wrap: balance;
+}
+.title-shadow-sm { text-shadow: 3px 3px 0 var(--title-shadow); }
+.title-shadow-lg { text-shadow: 5px 5px 0 var(--title-shadow); }
+/* Title sized so its longest word fits: set --title-chars inline (longestWordLength) and --title-max
+   on the element; needs a `container-type: inline-size` ancestor. --title-space defaults to its full width. */
+.fit-title { font-size: min(var(--title-max), calc(var(--title-space, 100cqw) / var(--title-chars))); } /* 1em per character */
+.label {
+  font-stretch: 110%;
+  font-weight: 800;
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.label--brand { color: var(--red); }
+.num { font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
 
-a:hover {
-  color: #FFF;
-  text-decoration: underline;
+/* ---------- surfaces ---------- */
+.checker {
+  height: 14px;
+  flex: none;
+  background: repeating-conic-gradient(var(--outline) 0 25%, #FDF3DF 0 50%) 0 0 / 14px 14px;
+  border-bottom: 3px solid var(--outline);
+}
+.sticker {
+  background: var(--surface);
+  border: 3px solid var(--outline);
+  border-radius: 16px;
+  box-shadow: 5px 5px 0 var(--shadow);
 }
 
-a:focus {
-  outline: 2px solid #FFD700;
-  outline-offset: 2px;
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 0 20px;
+  border: 3px solid var(--outline);
+  border-radius: 14px;
+  box-shadow: 0 5px 0 var(--shadow);
+  background: var(--surface);
+  color: var(--text);
+  font-stretch: 125%;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 17px;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+.btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 2px 0 var(--shadow); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn--primary { background: var(--red); color: var(--on-red); }
+.btn--block { width: 100%; }
+.btn--icon { width: 60px; padding: 0; }
+
+/* ---------- selection controls ---------- */
+.pill {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--outline);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  font-stretch: 125%;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+}
+.pill[aria-pressed='true'] {
+  background: var(--yellow);
+  color: var(--on-yellow);
+  box-shadow: 3px 3px 0 var(--shadow);
+  transform: rotate(-5deg);
 }
 
-button:focus {
-  outline: 2px solid #FFD700;
-  outline-offset: 2px;
-}
-
-/* Scrollbar styling for webkit browsers */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 215, 0, 0.5);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 215, 0, 0.7);
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
+.chip {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 2px solid var(--outline);
   border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+  background: var(--chip);
+  color: var(--chip-text);
+  font-weight: 800;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
 }
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
+.chip--now { background: var(--yellow); color: var(--on-yellow); }
+.chip--later { background: transparent; border-style: dashed; color: var(--muted); opacity: 0.6; }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.check {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--outline);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--ink);
+}
+.check--on, .check--mixed { background: var(--yellow); }
+.check--locked { background: var(--yellow); opacity: 0.6; }
+
+.tile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 7px 10px;
+  border: 2px solid var(--outline);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--text);
+  text-align: left;
+}
+.tile--off { background: transparent; border-style: dashed; border-color: var(--muted); color: var(--muted); }
+
+.dot {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  border-radius: 50%;
+  border: 2px solid var(--outline);
 }

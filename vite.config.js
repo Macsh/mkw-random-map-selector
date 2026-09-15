@@ -18,7 +18,7 @@ export default defineConfig({
         '*.svg'
       ],
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,jpg,jpeg}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,jpg,jpeg}', '**/archivo-latin-wdth-*.woff2'],
         runtimeCaching: [
           {
             urlPattern: /\.(?:png|jpg|jpeg|svg|webp)$/,
@@ -37,8 +37,8 @@ export default defineConfig({
         name: 'Mario Kart World Random Map Selector',
         short_name: 'MKW Selector',
         description: 'Random circuit selector for Mario Kart World multiplayer sessions',
-        theme_color: '#FF0000',
-        background_color: '#0066CC',
+        theme_color: '#E62B1E',
+        background_color: '#FDF3DF',
         display: 'standalone',
         start_url: '/mkw-random-map-selector/',
         icons: [

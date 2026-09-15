@@ -10,27 +10,33 @@ This project was created as an experiment in **"vibe coding"** - a development a
 
 The goal was to see how far we could push the boundaries of conversational programming, building a complete PWA from concept to deployment using modern web technologies and best practices, entirely through AI assistance.
 
+In September 2026 the app got its **Grand Prix redesign** (new look, layered world map, the SNES courses from update 1.8.0), built the same way with **Claude Opus 5** in Claude Code.
+
 ## ✨ Features
 
-- **Random Circuit Selection**: Choose from all 30 Mario Kart World tracks
+- **Random Circuit Selection**: Choose from 40 courses (30 world courses + the 10 SNES courses from update 1.8.0)
 - **Flexible Session Lengths**: 3, 4, 5, 6, 8, 12, 16, or 32 races
 - **Rainbow Road Last Option**: Force Rainbow Road to be the final race of any session
-- **Track Exclusions**: Selectively exclude specific tracks from random selection with visual counter
+- **Track Exclusions**: Course blocks (SNES first, then World) with select-all, and a visual counter of what's left
 - **Intelligent Track Management**: Rainbow Road auto-inclusion when "Rainbow Road Last" is enabled
 - **Player Management**: Track up to 4 players with tournament standings
-- **Smart Duplicate Prevention**: For 32-race sessions, prevents duplicates in the last 8 races
+- **Smart Duplicate Prevention**: Every selected course comes up once before any repeat, then never within the last 8 races; with a very small pool, never twice in a row
 - **Persistent User Preferences**: All settings (language, race count, options) saved between sessions
-- **Bilingual Support**: Toggle between English and French with flag buttons (🇺🇸/🇫🇷)
+- **Bilingual Support**: Toggle between English and French with the EN/FR buttons
+- **Light/Dark Theme**: Follows the system setting automatically, no toggle
 - **Responsive Design**: 
-  - Desktop: Full world map with highlighted circuits
-  - Mobile: Zoomed circuit view + mini-map with location pin
+  - Desktop: Full world map with a spotlight and a pin on the drawn course, plus a zoomed card where the course glows
+  - Phones and tablets (up to 1100px wide): Zoomed circuit view with the glowing course + a mini-map with a dot
+- **Optional Player Names**: Most sessions are played without names. Without them there are no standings to fill in, and a session with no positions entered ends on a route recap of every course played, with every race number
+- **Positions Sheet**: Enter or edit a race's finishing positions from a dedicated sheet; its previous/next arrows reach any race played so far, saving the entries on the way
+- **Share**: Share the session summary from the results screen (share sheet, or copied to the clipboard)
 - **Offline Support**: Works without internet connection (PWA)
 - **Tournament Tracking**: Points system with final standings and race history
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v18 or higher)
+- Node.js 22.12 or higher (required by Vite 7 and Vitest 5)
 - npm or yarn
 
 ### Installation
@@ -51,7 +57,7 @@ npm install
 npm run dev
 ```
 
-4. Open your browser and navigate to `http://localhost:5173`
+4. Open your browser and navigate to `http://localhost:5173/mkw-random-map-selector/`
 
 ## 🛠️ Available Scripts
 
@@ -59,6 +65,7 @@ npm run dev
 - `npm run build` - Build for production
 - `npm run preview` - Preview production build locally
 - `npm run lint` - Run ESLint for code quality checks
+- `npm test` - Run the Vitest unit tests once
 
 ## 📱 PWA Features
 
@@ -69,69 +76,92 @@ This app is installable as a Progressive Web App:
 
 ## 🎮 How to Use
 
-1. **Choose Language**: Toggle between English 🇺🇸 and French 🇫🇷 using the flag buttons
+1. **Choose Language**: Toggle between English and French using the EN/FR buttons
 2. **Select Race Count**: Choose how many races you want (3-32)
 3. **Rainbow Road Option**: Enable "Rainbow Road Last" to guarantee it as your final race
-4. **Customize Track Pool**: Use "Track Exclusions" to remove unwanted circuits (shows X/30 counter)
+4. **Customize Track Pool**: Open "Courses" to see a selected/total counter (40 by default) and two blocks — SNES (10) first, then World (30) — each with its own select-all and per-course toggles
 5. **Add Players** (Optional): Enter player names for tournament tracking
 6. **Start Session**: Begin your random circuit selection
 7. **Race Progress**: View each selected circuit on the world map
-8. **Enter Results**: Record player positions after each race (if players added)
-9. **View Results**: See final standings and complete race history
+8. **Enter Results**: Without player names, the session ends on a route recap of every course played; with names, you enter each race's finishing positions in a positions sheet; tap a box in the standings, or use the sheet's previous/next arrows, to edit any race played so far
+9. **View Results**: See final standings and complete race history (with players), or the route recap (without)
 
 **💡 Pro Tip**: All your preferences (language, settings, exclusions) are automatically saved for your next session!
 
 ## 🗺️ Map Integration
 
-The app includes placeholders for Mario Kart World map coordinates. To add the actual world map:
-
-1. Add your world map image to `public/` directory
-2. Update circuit coordinates in `src/data/circuits.js`
-3. Modify the WorldMap component to use the actual image
+The map is a layered stack (terrain, glow, course miniatures, spotlight, pins) built from the real Mario Kart World map image, zoomed and cropped around each course without any CSS scaling. The drawn course is lit from behind by a softly pulsing white glow, which stays still when the system asks for reduced motion. SNES courses are shown on the world course you pick them from. The route recap numbers each stop with every race played there, and sessions over 8 races draw a lighter route line.
 
 ## 🏆 Tournament System
 
-Points are awarded based on finishing position:
+Points are awarded based on finishing position (1st to 24th):
 - 1st place: 15 points
 - 2nd place: 12 points  
 - 3rd place: 10 points
 - 4th place: 8 points
-- And so on...
+- 5th to 11th place: 7, 6, 5, 4, 3, 2, 1 points
+- 12th place and below: 0 points
 
 ## 🔧 Technical Stack
 
-- **React 18** - UI framework
-- **Vite** - Build tool and dev server
+- **React 19** - UI framework
+- **Vite 7** - Build tool and dev server
 - **Vanilla CSS** - Styling with CSS Grid/Flexbox
 - **Vite PWA Plugin** - Progressive Web App functionality
 - **Workbox** - Service worker and caching
+- **Vitest** - Unit tests for the selection and race logic
+- **Archivo Variable** - Self-hosted variable font (`@fontsource-variable/archivo`)
 
 ## 📂 Project Structure
 
 ```
 src/
 ├── components/
-│   ├── SelectionScreen/    # Initial setup screen
-│   ├── WorldMap/          # Race display with map
-│   └── Results/           # Tournament results
+│   ├── SelectionScreen/    # Home screen: race count, course blocks, players
+│   ├── RaceScreen/         # One race at a time: map, standings, positions sheet
+│   ├── Results/            # Podium/table/history, or the route recap without players
+│   ├── Map/                # MapView and friends, the layered map used everywhere
+│   ├── LanguageToggle/     # EN/FR switch
+│   ├── ui/                 # Icon and badge components
+│   └── CoordinatePicker/   # Unused dev tool, not mounted in the app
+├── contexts/               # LanguageContext (t(), current language) and translations
 ├── data/
-│   └── circuits.js        # Mario Kart track data
+│   ├── circuits.js         # The 40 courses (30 world + 10 SNES)
+│   └── snesThumbnails.js   # SNES course-select thumbnails
+├── hooks/
+│   └── useIsMobile.js
 ├── utils/
-│   └── raceLogic.js       # Random selection logic
-└── App.jsx               # Main application component
+│   ├── raceLogic.js        # Random selection, points, standings
+│   ├── trackSelection.js   # Course pool / exclusion rules
+│   ├── mapGeometry.js      # Zoom, spotlight mask, route geometry
+│   ├── format.js           # Sorting and string interpolation helpers
+│   ├── share.js            # Session share text (Results.jsx calls Web Share / clipboard)
+│   └── settings.js         # localStorage persistence
+└── App.jsx                 # Session state and screen switching
 ```
+
+Vitest `*.test.js` files sit next to the module they cover (`circuits.test.js`, `raceLogic.test.js`, `trackSelection.test.js`, `mapGeometry.test.js`, `format.test.js`, `share.test.js`, `translations.test.js`).
 
 ## 🎯 Development Approach
 
 This project demonstrates **"vibe coding"** - an experimental development methodology that emphasizes:
 - **Conversational Programming**: Building software through natural language interaction
 - **Iterative Refinement**: Continuous improvement based on real-time feedback
-- **AI-Human Collaboration**: Leveraging Claude Sonnet 3.5 for full-stack development
+- **AI-Human Collaboration**: Leveraging Claude Sonnet 3.5, then Claude Opus 5, for full-stack development
 - **Intuitive Design**: Following user experience instincts rather than rigid specifications
 
 The result is a fully functional PWA built entirely through AI-assisted development, showcasing the potential of modern AI tools in creating production-ready applications.
 
 ## 🚀 Recent Updates
+
+### September 2026 - Grand Prix Redesign
+- **🏁 New Look**: Grand Prix arcade style, with light and dark themes that follow the system
+- **🗺️ Layered Map**: The drawn course glows on phones; on desktop a spotlight and a pin mark it on the full map
+- **🕹️ SNES Courses**: The 10 courses from update 1.8.0 (French names are provisional), in their own block; all 40 courses are selected by default
+- **👥 Names Optional**: Without names the race screen stays clean and the session ends on a route recap
+- **✏️ Positions Sheet**: Enter or fix any race's positions, moving between races with previous/next
+- **📱 Tablets**: The phone layout now covers screens up to 1100px wide, with a sticky "New session" bar
+- **🚢 Wario Shipyard**: Wario's Galleon now uses its official English name
 
 ### v2.0 - Enhanced User Experience
 - **🌈 Rainbow Road Last**: New option to guarantee Rainbow Road as the final race
