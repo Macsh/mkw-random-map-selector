@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Mario Kart World random course picker: a React 19 + Vite 7 PWA (plain JavaScript/JSX, vanilla CSS, no router, no state library). The whole project was originally "vibe coded" with an AI, so expect some dead code, duplicated logic and stale docs (the README says React 18 and calls the map a placeholder; both are out of date). The owner speaks French; the UI is bilingual EN/FR.
+Mario Kart World random course picker: a React 19 + Vite 7 PWA (plain JavaScript/JSX, vanilla CSS, no router, no state library). The whole project was originally "vibe coded" with an AI, so expect some dead code and duplicated logic. The owner speaks French; the UI is bilingual EN/FR.
 
 ## Commands
 
@@ -13,59 +13,41 @@ npm run dev      # Vite dev server → http://localhost:5173/mkw-random-map-sele
 npm run build    # production build into dist/ (also generates the service worker)
 npm run lint     # ESLint flat config (eslint.config.js)
 npm run preview  # serve the built dist/
+npm test         # runs Vitest once (vitest run)
+npx vitest run src/utils/raceLogic.test.js -t "Rainbow Road"  # run a single test
 ```
 
-There is no test suite. Check changes with `npm run lint`, `npm run build`, and by running the app (the map is canvas-drawn, so only a visual check shows whether it's correct).
-
-Deployment: every push to `main` triggers `.github/workflows/deploy.yml` (Node 18, `npm ci && npm run build`) and publishes to GitHub Pages. The Vite `base` and the PWA `start_url` are both hard-coded to `/mkw-random-map-selector/`.
+Deployment: every push to `main` triggers `.github/workflows/deploy.yml` (Node 22, `npm ci`, then lint, test, build) and publishes to GitHub Pages. The Vite `base` and the PWA `start_url` are both hard-coded to `/mkw-random-map-selector/`.
 
 ## Architecture
 
-### App flow
-`App.jsx` holds all session state and switches on `gameState`: `'selection'` → `'racing'` → `'results'`. `SelectionScreen` calls `onStartSession({ raceCount, players, rainbowRoadLast, excludedTracks })`, `App` builds the race list up front with `generateRaceSelection()`, then `WorldMap` shows one race at a time (`currentRaceIndex`). Player finishing positions are stored twice: in `players[i].positions[raceIndex]` and in `raceResults[raceIndex].positions`. `calculateStandings()` reads from `players`.
+### Data: `src/data/circuits.js`
+40 courses: 30 world courses plus 10 SNES courses (update 1.8.0). World courses have `x`/`y` at the centre of their miniature on the world map image (2674×2339, in %). SNES courses instead have a `parentId` and no point of their own; every map consumer gets a point via `getMapSpot(circuit)`, which returns the parent's. `getCircuitName(circuit, language)` reads `nameEn`/`nameFr`; `getCircuitShortName` strips the leading `SNES ` and is used next to an `SnesBadge`. `snesThumbnails.js` holds the SNES course-select thumbnails, kept apart so `circuits.js` stays asset-free.
 
-The player-position entry modal and the positions grid live inline in `WorldMap.jsx`. There is no separate `PlayerPositions` component, even though `.github/copilot-instructions.md` mentions one.
+### Selection rules: `src/utils/trackSelection.js`
+Pure, tested helpers around the draw pool (selected courses minus a locked Rainbow Road): `MIN_POOL = 3` is enforced on every toggle (single course or whole block), a locked Rainbow Road can't be excluded, block state is `'on' | 'off' | 'mixed'`, and `sanitizeExcluded` runs on load to drop unknown ids, un-exclude a locked Rainbow Road, and reset if the pool would fall below the minimum.
 
-### Course data: `src/data/circuits.js`
-This file is the single source of truth for courses. Each entry has `id`, `nameEn`, `nameFr`, `x` and `y`, where `x`/`y` are **percentages of the world map image** (2674×2339). Course names are not in `translations.js`: always go through `getCircuitName(circuit, language)`. `trackThemes` maps each `id` to the color of the "Track N" badge.
+### Map: `src/components/Map/MapView.jsx`
+`MapView` is a single component reused everywhere (home mini-map, race screen, session route map). Layers, bottom to top: terrain image, glow (when present), miniatures image + Rainbow Road icon, spotlight dark overlay (when present, above the miniatures), then children (pins, route). Zoom uses `zoomStackStyle` from `mapGeometry.js`: a real enlarged box (`zoom × 100%`) positioned with clamped `left`/`top` so the frame never shows past the map edges — no CSS `scale`. The stack is a `container-type: inline-size` container, so effect sizes (glow, spotlight mask) are in `cqw` and stay in map units regardless of zoom.
 
-The `id` values are persisted in localStorage (the excluded-tracks list), so renaming an `id` silently drops a user's saved exclusions.
+### Screens
+- `SelectionScreen` (+ `TrackBlocks`): home, with course blocks and select-all.
+- `RaceScreen` (+ `Standings`, `PositionsSheet`): mobile uses a `glow` effect and a mini-map pin, desktop uses a dark `spotlight`. Standings and the positions sheet only render when there are players. SNES courses get an `SnesBadge` and a "pick from {course}" hint.
+- `Results`: shows a podium/table/history with players, or a route recap (`SessionRouteMap`) without.
 
-### World map rendering
-The map is a stack of **two same-size images** from `src/assets/` (they originally come from the Super Mario Wiki):
-1. `MarioKartWorld_World_Map_Inner.webp`: the terrain.
-2. `MarioKartWorld_World_Map_Stages.webp`: a transparent overlay containing the 3D miniature of each course.
+### i18n
+`t(key, vars)` from `useLanguage()`. Plurals use `key_one`/`key_other` selected by `vars.count`. French copy uses U+00A0 before `!`/`?`/`:` and the typographic apostrophe. Translation keys live in namespaces `common`, `home`, `race`, `sheet`, `end` inside `src/contexts/translations.js`.
 
-A pulsing white glow is drawn **between** the two layers so it appears under the course miniature. Rainbow Road is **not** on the Stages overlay, so `MKWorld_Icon_Rainbow_Road.png` is drawn separately at hard-coded coordinates (`49.9, 70.5`, which differ slightly from its `circuits.js` entry). Any course missing from the Stages overlay needs the same special handling.
-
-There are two canvas components with a lot of duplicated code (image loading, resizing, Rainbow Road icon). **Change both** when touching map drawing:
-- `WorldMapCanvas`: the whole map. On desktop it is the main view with the course name drawn as a label. On mobile it is a mini-map with a bouncing 📍 pin. The pin/label Y offsets (`-35`, `-18`, `+50`) are pixel nudges applied on top of the percentage coordinates.
-- `ZoomedMapCanvas`: mobile only. A 4× crop centered on the course, with the name shown in an HTML overlay.
-
-Mobile vs desktop is decided in JS (`window.innerWidth <= 768` in `WorldMap.jsx`), not only through CSS. Both canvases redraw on every `requestAnimationFrame` by bumping a state counter.
-
-### Race selection: `src/utils/raceLogic.js`
-`generateRaceSelection` draws courses without replacement until the pool is empty. After that, repeats are allowed but never among the last 8 races. With `rainbowRoadLast`, Rainbow Road is removed from the pool and appended at the end. Points per position: 15/12/10/8/7/6/5/4/3/2/1, then 0.
-
-The special id `'rainbow_road'` is hard-coded in `raceLogic.js`, `SelectionScreen.jsx` (it can't be excluded while "Rainbow Road Last" is on), and both canvases. `SelectionScreen` requires at least 3 non-excluded courses.
-
-### Settings and i18n
-- `src/utils/settings.js`: one localStorage key, `mkw-random-selector-settings`. `loadSettings()` merges the stored value over the defaults, and `updateSetting(key, value)` writes the change immediately. Player names are not persisted.
-- The language context is split across three files (`languageContext.js` creates the context, `LanguageContext.jsx` is the provider, `useLanguage.js` is the hook) to satisfy the `react-refresh/only-export-components` lint rule. Keep that split.
-- `translations.js` uses flat `section.key` strings, and `t(key)` falls back to the key itself. Several strings are still hard-coded in English: alerts and headings in `WorldMap.jsx`, plus "completed"/"points" in `Results.jsx`.
+### Theme
+Design tokens on `:root` in `src/index.css`; dark mode overrides them under `@media (prefers-color-scheme: dark)`, no toggle. Type is Archivo Variable, self-hosted via `@fontsource-variable/archivo` (imported in `main.jsx`), with only the latin `wdth` woff2 files precached by Workbox (`**/archivo-latin-wdth-*.woff2` in `vite.config.js`).
 
 ### Touchpoints when the course list changes
-- `circuits.js`: the entry itself plus its `trackThemes` color.
-- A course icon on the map: either an updated Stages overlay, or separate drawing like Rainbow Road in both canvases.
-- Hard-coded course counts in `translations.js` (`selection.warning32*`, "30 unique tracks" / "29") and in `CoordinatePicker.jsx`.
-- The README feature list ("all 30 tracks").
+- `circuits.js` (the entry itself) and, for a SNES course, `snesThumbnails.js`.
+- The course-count assertion in `circuits.test.js` (`toHaveLength(40)`).
+- The README feature list ("40 courses").
 
-### Dead / dev-only code
-- `CoordinatePicker`: a click-to-place tool used once to measure course coordinates. It is not mounted anywhere and reads a stale `track.name` field; it must be wired in temporarily to be used.
-- `ResultsTest.jsx`, `isValidRaceCount`, `clearSettings`, and many unused translation keys.
-
-### PWA
-`vite-plugin-pwa` is set to `registerType: 'autoUpdate'`. Workbox precaches every js/css/html/image file, and images also use a CacheFirst runtime cache. Assets imported from `src/assets/` get hashed file names. `public/` only holds the favicon and PWA icon.
+### Dead code
+`CoordinatePicker` (`src/components/CoordinatePicker/`) is not mounted anywhere and is stale; it was a one-off tool used to measure course coordinates.
 
 ## Conventions (from `.github/copilot-instructions.md`)
 Functional components and hooks only, with simple local state. Responsive design must work on both desktop and mobile. Offline-first: every asset must be bundled (no runtime fetches from external hosts). Supported race counts: 3, 4, 5, 6, 8, 12, 16, 32. Players: 0–4 (optional).

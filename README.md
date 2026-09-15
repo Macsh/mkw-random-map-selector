@@ -12,18 +12,21 @@ The goal was to see how far we could push the boundaries of conversational progr
 
 ## ✨ Features
 
-- **Random Circuit Selection**: Choose from all 30 Mario Kart World tracks
+- **Random Circuit Selection**: Choose from 40 courses (30 world courses + the 10 SNES courses from update 1.8.0)
 - **Flexible Session Lengths**: 3, 4, 5, 6, 8, 12, 16, or 32 races
 - **Rainbow Road Last Option**: Force Rainbow Road to be the final race of any session
-- **Track Exclusions**: Selectively exclude specific tracks from random selection with visual counter
+- **Track Exclusions**: Course blocks with select-all, and a visual counter of what's left
 - **Intelligent Track Management**: Rainbow Road auto-inclusion when "Rainbow Road Last" is enabled
 - **Player Management**: Track up to 4 players with tournament standings
 - **Smart Duplicate Prevention**: For 32-race sessions, prevents duplicates in the last 8 races
 - **Persistent User Preferences**: All settings (language, race count, options) saved between sessions
 - **Bilingual Support**: Toggle between English and French with flag buttons (🇺🇸/🇫🇷)
+- **Light/Dark Theme**: Follows the system setting automatically, no toggle
 - **Responsive Design**: 
   - Desktop: Full world map with highlighted circuits
   - Mobile: Zoomed circuit view + mini-map with location pin
+- **No-Player-Names Flow**: Without players, races and results show a route recap instead of standings
+- **Positions Sheet**: Enter or edit a race's finishing positions from a dedicated sheet, including past races
 - **Offline Support**: Works without internet connection (PWA)
 - **Tournament Tracking**: Points system with final standings and race history
 
@@ -83,11 +86,7 @@ This app is installable as a Progressive Web App:
 
 ## 🗺️ Map Integration
 
-The app includes placeholders for Mario Kart World map coordinates. To add the actual world map:
-
-1. Add your world map image to `public/` directory
-2. Update circuit coordinates in `src/data/circuits.js`
-3. Modify the WorldMap component to use the actual image
+The map is a layered stack (terrain, glow, course miniatures, spotlight, pins) built from the real Mario Kart World map image, zoomed and cropped around each course without any CSS scaling.
 
 ## 🏆 Tournament System
 
@@ -100,11 +99,13 @@ Points are awarded based on finishing position:
 
 ## 🔧 Technical Stack
 
-- **React 18** - UI framework
+- **React 19** - UI framework
 - **Vite** - Build tool and dev server
 - **Vanilla CSS** - Styling with CSS Grid/Flexbox
 - **Vite PWA Plugin** - Progressive Web App functionality
 - **Workbox** - Service worker and caching
+- **Vitest** - Unit tests for the selection and race logic
+- **Archivo Variable** - Self-hosted variable font (`@fontsource-variable/archivo`)
 
 ## 📂 Project Structure
 
