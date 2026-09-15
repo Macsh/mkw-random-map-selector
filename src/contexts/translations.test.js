@@ -23,4 +23,10 @@ describe('translations', () => {
       expect(translations.en[key.replace(/_one$/, '_other')], key).toBeDefined();
     }
   });
+
+  it('has no legacy keys left', () => {
+    for (const language of ['en', 'fr']) {
+      expect(Object.keys(translations[language]).filter((key) => !NEW_NAMESPACES.test(key))).toEqual([]);
+    }
+  });
 });
