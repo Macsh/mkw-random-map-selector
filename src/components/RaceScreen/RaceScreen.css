@@ -131,6 +131,8 @@
 }
 .sheet {
   width: 100%;
+  max-width: 560px;
+  margin-inline: auto;
   max-height: 90dvh;
   overflow-y: auto;
   display: flex;
