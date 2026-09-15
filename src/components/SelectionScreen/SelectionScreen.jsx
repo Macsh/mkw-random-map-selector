@@ -4,6 +4,7 @@ import { circuits } from '../../data/circuits.js';
 import { loadSettings, updateSetting } from '../../utils/settings.js';
 import { countRepeats } from '../../utils/raceLogic.js';
 import { sanitizeExcluded } from '../../utils/trackSelection.js';
+import { longestWordLength } from '../../utils/format.js';
 import { useIsMobile } from '../../hooks/useIsMobile.js';
 import LanguageToggle from '../LanguageToggle/LanguageToggle.jsx';
 import Icon from '../ui/Icon.jsx';
@@ -27,6 +28,8 @@ function SelectionScreen({ onStartSession }) {
   const [players, setPlayers] = useState(['', '', '', '']);
 
   const activePlayers = players.map((name) => name.trim()).filter(Boolean);
+  const title = t('home.title');
+  const titleStyle = { '--title-chars': longestWordLength(title) };
   const selectedCount = circuits.length - excludedTracks.length;
   const repeats = countRepeats(raceCount, selectedCount, rainbowRoadLast);
 
@@ -165,7 +168,7 @@ function SelectionScreen({ onStartSession }) {
             <span className="label label--brand">{t('common.brand')}</span>
             <LanguageToggle />
           </header>
-          <h1 className="display title-shadow-sm home__title">{t('home.title')}</h1>
+          <h1 className="display title-shadow-sm fit-title home__title" style={titleStyle}>{title}</h1>
           {settings}
         </main>
       </div>
@@ -178,7 +181,7 @@ function SelectionScreen({ onStartSession }) {
       <main className={`home__body home__body--desktop${showTrackOptions ? ' home__body--top' : ''}`}>
         <div className="home__hero">
           <span className="label label--brand home__brand">{t('common.brand')}</span>
-          <h1 className="display title-shadow-lg home__title">{t('home.title')}</h1>
+          <h1 className="display title-shadow-lg fit-title home__title" style={titleStyle}>{title}</h1>
           <div className="home__map">
             <div className="sticker home__map-card">
               <MapView className="home__map-view" />

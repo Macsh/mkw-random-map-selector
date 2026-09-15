@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { interpolate, formatOrdinal, sortByName, formatRaceNumbers } from './format.js';
+import { interpolate, formatOrdinal, sortByName, formatRaceNumbers, longestWordLength } from './format.js';
 
 describe('interpolate', () => {
   it('replaces known placeholders and keeps unknown ones', () => {
@@ -42,5 +42,31 @@ describe('formatRaceNumbers', () => {
     expect(formatRaceNumbers([3])).toBe('3');
     expect(formatRaceNumbers([2, 5, 9])).toBe('2·5·9');
     expect(formatRaceNumbers([2, 5, 9, 12])).toBe('2·5…');
+  });
+});
+
+describe('longestWordLength', () => {
+  it('counts the characters of the longest word', () => {
+    expect(longestWordLength('Whistlestop Summit')).toBe(11);
+    expect(longestWordLength('Pic de l’observatoire')).toBe(14);
+    expect(longestWordLength('  Crown   City ')).toBe(5);
+    expect(longestWordLength('Trophéopolis')).toBe(12);
+  });
+
+  it('counts accented and astral characters once', () => {
+    expect(longestWordLength('Île Choco 1')).toBe(5);
+    expect(longestWordLength('Désert du soleil')).toBe(6);
+    expect(longestWordLength('\u{1D538}\u{1D539} go')).toBe(2);
+  });
+
+  it('keeps words joined by a no-break space together, since the line cannot break there', () => {
+    expect(longestWordLength('Tournoi terminé\u{A0}!')).toBe(9);
+    expect(longestWordLength('Pas\u{202F}encore')).toBe(10);
+    expect(longestWordLength('Tournament over!')).toBe(10);
+  });
+
+  it('returns 0 for an empty text', () => {
+    expect(longestWordLength('')).toBe(0);
+    expect(longestWordLength('   ')).toBe(0);
   });
 });

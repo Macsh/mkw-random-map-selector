@@ -100,6 +100,9 @@ img { max-width: 100%; }
 }
 .title-shadow-sm { text-shadow: 3px 3px 0 var(--title-shadow); }
 .title-shadow-lg { text-shadow: 5px 5px 0 var(--title-shadow); }
+/* Title sized so its longest word fits: set --title-chars inline (longestWordLength) and --title-max
+   on the element; needs a `container-type: inline-size` ancestor. --title-space defaults to its full width. */
+.fit-title { font-size: min(var(--title-max), calc(var(--title-space, 100cqw) / (var(--title-chars) * 0.9))); }
 .label {
   font-stretch: 110%;
   font-weight: 800;

@@ -3,6 +3,7 @@ import { useLanguage } from '../../contexts/useLanguage.js';
 import { getCircuitName, getCircuitShortName, getMapSpot, getParentCircuit, isSnes } from '../../data/circuits.js';
 import { getSnesThumbnail } from '../../data/snesThumbnails.js';
 import { MAP_ASPECT } from '../../utils/mapGeometry.js';
+import { longestWordLength } from '../../utils/format.js';
 import { useIsMobile } from '../../hooks/useIsMobile.js';
 import LanguageToggle from '../LanguageToggle/LanguageToggle.jsx';
 import Icon from '../ui/Icon.jsx';
@@ -66,6 +67,7 @@ function RaceScreen({ currentRace, races, raceIndex, totalRaces, players, onNext
   const snes = isSnes(currentRace);
   const spot = getMapSpot(currentRace);
   const title = snes ? getCircuitShortName(currentRace, language) : getCircuitName(currentRace, language);
+  const titleStyle = { '--title-chars': longestWordLength(title) };
 
   const goNext = () => (isLastRace ? onEndSession() : onNextRace());
   const nextLabel = isLastRace
@@ -129,7 +131,7 @@ function RaceScreen({ currentRace, races, raceIndex, totalRaces, players, onNext
               <MapView spot={spot} effect="glow" zoom={4} />
               <MiniMap spot={spot} className="race-zoom__mini" />
             </div>
-            <h1 className="sticker race-zoom__banner">
+            <h1 className="sticker fit-title race-zoom__banner" style={titleStyle}>
               {snes && <SnesBadge />}
               <span className="display">{title}</span>
             </h1>
@@ -165,7 +167,9 @@ function RaceScreen({ currentRace, races, raceIndex, totalRaces, players, onNext
           <div className="race-desktop__heading">
             <span className="label">{t('race.drawn')}</span>
             {snes && <SnesBadge size="md" />}
-            <h1 className={`display title-shadow-sm race-desktop__title${snes ? ' race-desktop__title--snes' : ''}`}>{title}</h1>
+            <h1 className={`display title-shadow-sm fit-title race-desktop__title${snes ? ' race-desktop__title--snes' : ''}`} style={titleStyle}>
+              {title}
+            </h1>
           </div>
           <div className="sticker race-desktop__zoom">
             <MapView spot={spot} effect="spotlight" dim zoom={4} aspect={zoomAspect} />

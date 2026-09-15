@@ -3,6 +3,7 @@ import { useLanguage } from '../../contexts/useLanguage.js';
 import { getCircuitName, getCircuitShortName, getMapSpot, isSnes, RAINBOW_ROAD_ID } from '../../data/circuits.js';
 import { calculateStandings, getPoints, isPerfectTie } from '../../utils/raceLogic.js';
 import { buildShareText } from '../../utils/share.js';
+import { longestWordLength } from '../../utils/format.js';
 import { useIsMobile } from '../../hooks/useIsMobile.js';
 import LanguageToggle from '../LanguageToggle/LanguageToggle.jsx';
 import Icon from '../ui/Icon.jsx';
@@ -162,6 +163,7 @@ function Results({ sessionData, onNewSession }) {
   const hasPlayers = players.length > 0;
   const standings = hasPlayers ? calculateStandings([], players) : [];
   const title = t(hasPlayers ? 'end.tournamentOver' : 'end.sessionOver');
+  const titleStyle = { '--title-chars': longestWordLength(title) };
   const summary = hasPlayers
     ? `${t('common.races', { count: races.length })} · ${t('common.players', { count: players.length })}`
     : t('common.races', { count: races.length });
@@ -192,7 +194,7 @@ function Results({ sessionData, onNewSession }) {
             <LanguageToggle />
           </header>
           <div className="results__heading">
-            <h1 className="display title-shadow-sm results__title">{title}</h1>
+            <h1 className="display title-shadow-sm fit-title results__title" style={titleStyle}>{title}</h1>
             <p className="muted results__summary">{summary}</p>
           </div>
           {hasPlayers ? (
@@ -252,7 +254,7 @@ function Results({ sessionData, onNewSession }) {
         <div className={hasPlayers ? 'results-desktop__grid' : 'results-desktop__grid results-desktop__grid--route'}>
           <div className="results-desktop__main">
             <div className="results__heading">
-              <h1 className="display title-shadow-lg results__title">{title}</h1>
+              <h1 className="display title-shadow-lg fit-title results__title" style={titleStyle}>{title}</h1>
               <p className="muted results__summary">{summary}</p>
             </div>
             {actions}

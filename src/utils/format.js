@@ -16,3 +16,10 @@ export const sortByName = (circuits, language) =>
 
 export const formatRaceNumbers = (numbers) =>
   numbers.length <= 3 ? numbers.join('·') : `${numbers.slice(0, 2).join('·')}…`;
+
+// Breaking whitespace only: a no-break space (U+00A0, U+202F) keeps its neighbours on one line
+const BREAKING_SPACE = /[^\S\u{A0}\u{202F}]+/u;
+
+// Characters in the longest unbreakable word, used to size display titles so that word fits
+export const longestWordLength = (text) =>
+  Math.max(0, ...text.split(BREAKING_SPACE).map((word) => [...word].length));

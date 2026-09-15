@@ -27,7 +27,7 @@
 .race__body { display: flex; flex-direction: column; gap: 16px; padding: 16px 16px 36px; }
 .race__top { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; }
 
-.race-zoom { position: relative; padding-top: 26px; }
+.race-zoom { position: relative; padding-top: 26px; container-type: inline-size; }
 .race-zoom--snes { padding-top: 50px; }
 .race-zoom__card { position: relative; overflow: hidden; }
 .race-zoom__mini { position: absolute; right: 10px; bottom: 10px; width: 116px; }
@@ -44,11 +44,12 @@
   padding: 10px 16px 9px;
   background: var(--yellow);
   color: var(--on-yellow);
-  font-size: 30px;
+  --title-max: 30px;
+  --title-space: calc(100cqw - 56px);
   transform: rotate(-3deg);
 }
 .race-zoom__banner .display { font-size: inherit; }
-.race-zoom--snes .race-zoom__banner { padding: 8px 14px 10px; font-size: 22px; white-space: nowrap; }
+.race-zoom--snes .race-zoom__banner { padding: 8px 14px 10px; --title-max: 22px; white-space: nowrap; }
 
 .snes-track { display: flex; overflow: hidden; }
 .snes-track img { display: block; object-fit: cover; }
@@ -113,9 +114,9 @@
 }
 .race-desktop__map-view { width: min(100cqw, calc(100cqh * 1.1432)); }
 .race-desktop__side { display: flex; flex-direction: column; gap: 18px; min-height: 0; overflow-y: auto; padding: 0 6px 6px 0; }
-.race-desktop__heading { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
-.race-desktop__title { font-size: 60px; }
-.race-desktop__title--snes { font-size: 52px; }
+.race-desktop__heading { container-type: inline-size; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.race-desktop__title { --title-max: 60px; }
+.race-desktop__title--snes { --title-max: 52px; }
 .race-desktop__zoom { flex: none; overflow: hidden; }
 
 /* ---------- positions sheet ---------- */
