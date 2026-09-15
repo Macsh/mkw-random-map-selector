@@ -34,7 +34,7 @@ export const circuits = [
   { id: 'salty_salty_speedway', group: 'world', nameEn: 'Salty Salty Speedway', nameFr: 'Cité Fleur-de-sel', x: 74.2, y: 60.62 },
   { id: 'shy_guy_bazaar', group: 'world', nameEn: 'Shy Guy Bazaar', nameFr: 'Souk Maskass', x: 13.09, y: 50.06 },
   { id: 'sky_high_sundae', group: 'world', nameEn: 'Sky-High Sundae', nameFr: 'Cité Sorbet', x: 84.78, y: 34.8 },
-  { id: 'starview_peak', group: 'world', nameEn: 'Starview Peak', nameFr: "Pic de ’observatoire", x: 73.6, y: 23.9 },
+  { id: 'starview_peak', group: 'world', nameEn: 'Starview Peak', nameFr: "Pic de l’observatoire", x: 73.6, y: 23.9 },
   { id: 'toads_factory', group: 'world', nameEn: "Toad's Factory", nameFr: 'Usine Toad', x: 39.01, y: 35.06 },
   { id: 'wario_stadium', group: 'world', nameEn: 'Wario Stadium', nameFr: 'Stade Wario', x: 26.25, y: 43.05 },
   { id: 'warios_galleon', group: 'world', nameEn: 'Wario Shipyard', nameFr: 'Galion de Wario', x: 85.79, y: 54.04 },

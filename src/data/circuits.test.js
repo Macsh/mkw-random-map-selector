@@ -57,6 +57,7 @@ describe('circuits data', () => {
     expect(getCircuitById(RAINBOW_ROAD_ID)).toBeDefined();
     expect(getCircuitById('warios_galleon').nameEn).toBe('Wario Shipyard');
     expect(getCircuitById('warios_galleon').nameFr).toBe('Galion de Wario');
+    expect(getCircuitById('starview_peak').nameFr).toBe("Pic de l’observatoire");
   });
 });
 
