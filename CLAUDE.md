@@ -37,7 +37,7 @@ Pure, tested helpers around the draw pool (selected courses minus a locked Rainb
 `MapView` is a single component reused everywhere: the home screen's desktop map card, the race screen (compact: a zoomed `MapView` plus a `MiniMap` with a red dot; desktop: a spotlighted `MapView` with a red `MapPin`, plus a separate zoomed card with the same `glow` as compact), and the results screen's route recap (`SessionRouteMap`, both compact and desktop, when no position was entered). Layers, bottom to top: terrain image, glow (when present; it breathes with the `map-glow-pulse` animation in `Map.css`, which the `prefers-reduced-motion` rule in `index.css` turns off), miniatures image + Rainbow Road icon, spotlight dark overlay (when present, above the miniatures), then children (pins, route). Zoom uses `zoomStackStyle` from `mapGeometry.js`: a real enlarged box (`zoom × 100%`) positioned with clamped `left`/`top` so the frame never shows past the map edges — no CSS `scale`. The stack is a `container-type: inline-size` container, so effect sizes (glow, spotlight mask) are in `cqw` and stay in map units regardless of zoom.
 
 ### Layout
-The compact (phone and tablet) layouts apply at ≤1100px wide: `useIsMobile()` matches `(max-width: 1100px)`, and the positions sheet's desktop media query in `RaceScreen.css` is `(min-width: 1101px)`; keep the two in sync. Compact screen bodies are centred at 560px. Display titles use the `.fit-title` primitive (`src/index.css`): `--title-chars` comes from `longestWordLength(text)` and the font size is capped so the longest word fits its `container-type: inline-size` parent.
+The compact (phone and tablet) layouts apply at ≤1100px wide: `useIsMobile()` matches `(max-width: 1100px)`, and the positions sheet's desktop media query in `RaceScreen.css` is `(min-width: 1101px)`; keep the two in sync. Don't lower this threshold without re-checking 820–1100px: with the old 768px switch, the desktop grids had no room there (the home title slid under the settings cards, and the results route map covered the title and buttons). Compact screen bodies are centred at 560px. Display titles use the `.fit-title` primitive (`src/index.css`): `--title-chars` comes from `longestWordLength(text)` and the font size is capped so the longest word fits its `container-type: inline-size` parent.
 
 ### Screens
 - `SelectionScreen` (+ `TrackBlocks`): home, with course blocks and select-all.
@@ -62,3 +62,39 @@ Design tokens on `:root` in `src/index.css`; dark mode overrides them under `@me
 
 ## Conventions
 Functional components and hooks only, with simple local state. Responsive design must work on both compact and desktop layouts. Offline-first: every asset must be bundled (no runtime fetches from external hosts). Supported race counts: 3, 4, 5, 6, 8, 12, 16, 32. Players: 0–4 (optional). `.github/copilot-instructions.md` holds a short copy of these facts for Copilot; keep it in sync.
+
+## Rules
+
+Lessons from the September 2026 redesign. Follow them without asking the owner again.
+
+### Working with the owner
+- The owner "vibe codes" this project and doesn't read specs or plans: review your own plans (or have a subagent review them), then go ahead.
+- Planning docs (`docs/superpowers/`, `.superpowers/`) stay local. Never commit or push them.
+- If a request or a piece of feedback is ambiguous, ask before building; never guess. Group the open points into one question.
+- When offering visual options, show the same screens in every option so they can be compared.
+- Reply to the owner in French. Code, commits and docs stay in English.
+
+### Product
+- Most sessions are played without player names. Design and check that flow first: without names there are no standings and no Positions button, and without any position entered the results end on the route recap.
+- Never hide race data behind a truncation: route stops list every race number (`raceNumberRows`).
+- Course selection works by blocks (SNES, World) rather than extra toggles. The SNES block comes first (`BLOCK_ORDER` in `TrackBlocks.jsx`); `COURSE_GROUPS` keeps the data order.
+- The French SNES course names are provisional (unofficial sources). Fix them through `nameFr` only.
+
+### Visual design
+- A drawn course is lit from behind by a white glow: never gold, never a circle or ring around it. The desktop big map adds a spotlight and a red pin.
+- The glow breathes gently (`map-glow-pulse`). Animate only `transform` and `opacity`, and keep the `prefers-reduced-motion` rule that turns animations off.
+- Sessions over `DISCREET_ROUTE_AFTER_RACES` (8) races draw a lighter route so the map stays readable.
+
+### UI
+- Text never overflows or overlaps, in EN or FR. Display titles use `.fit-title`; other long text wraps or ends with an ellipsis.
+- Hit targets are at least 44px. When a control must look smaller, enlarge its hit area with `::after` (see the standings chips).
+- A focus ring inside an `overflow: hidden` parent needs `outline-offset: -3px`, or it gets clipped.
+- Changing screen or race scrolls back to the top (`App.jsx`). Keep that when adding a screen or a state.
+- Give every `<img>` explicit `width` and `height`.
+- Prefix CSS classes with their component (`.map-mini`, not `.mini-map`): all CSS files share one global scope, so generic names collide.
+
+### Before calling UI work done
+- Run `npm run lint && npm test && npm run build`.
+- Check the result in a browser at 360, 390, 820, 1101, 1280 and 1440px wide, in EN and FR, light and dark, with and without names, including a 32-race session. Use the longest names: "Pic de l’observatoire", "Whistlestop Summit", "Tournament over!".
+- Edit strings that contain U+00A0 or ’ with file-editing tools, not `sed` or shell quoting: a shell edit once turned "Pic de l’observatoire" into "Pic de ’observatoire".
+- Keep docs true to what the screen shows (a dot on the compact mini-map, a pin on desktop). After a UI change, update README.md, this file and `.github/copilot-instructions.md`.

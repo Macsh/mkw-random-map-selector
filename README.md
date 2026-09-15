@@ -10,23 +10,26 @@ This project was created as an experiment in **"vibe coding"** - a development a
 
 The goal was to see how far we could push the boundaries of conversational programming, building a complete PWA from concept to deployment using modern web technologies and best practices, entirely through AI assistance.
 
+In September 2026 the app got its **Grand Prix redesign** (new look, layered world map, the SNES courses from update 1.8.0), built the same way with **Claude Opus 5** in Claude Code.
+
 ## ✨ Features
 
 - **Random Circuit Selection**: Choose from 40 courses (30 world courses + the 10 SNES courses from update 1.8.0)
 - **Flexible Session Lengths**: 3, 4, 5, 6, 8, 12, 16, or 32 races
 - **Rainbow Road Last Option**: Force Rainbow Road to be the final race of any session
-- **Track Exclusions**: Course blocks with select-all, and a visual counter of what's left
+- **Track Exclusions**: Course blocks (SNES first, then World) with select-all, and a visual counter of what's left
 - **Intelligent Track Management**: Rainbow Road auto-inclusion when "Rainbow Road Last" is enabled
 - **Player Management**: Track up to 4 players with tournament standings
-- **Smart Duplicate Prevention**: For 32-race sessions, prevents duplicates in the last 8 races
+- **Smart Duplicate Prevention**: Every selected course comes up once before any repeat, then never within the last 8 races; with a very small pool, never twice in a row
 - **Persistent User Preferences**: All settings (language, race count, options) saved between sessions
 - **Bilingual Support**: Toggle between English and French with the EN/FR buttons
 - **Light/Dark Theme**: Follows the system setting automatically, no toggle
 - **Responsive Design**: 
-  - Desktop: Full world map with a spotlight and a pin on the drawn course, plus a separate zoomed card
-  - Phones and tablets (up to 1100px wide): Zoomed circuit view + a mini-map with a dot
-- **No-Player-Names Flow**: Without players, races and results show a route recap instead of standings
+  - Desktop: Full world map with a spotlight and a pin on the drawn course, plus a zoomed card where the course glows
+  - Phones and tablets (up to 1100px wide): Zoomed circuit view with the glowing course + a mini-map with a dot
+- **Optional Player Names**: Most sessions are played without names. Without them there are no standings to fill in, and a session with no positions entered ends on a route recap of every course played, with every race number
 - **Positions Sheet**: Enter or edit a race's finishing positions from a dedicated sheet; its previous/next arrows reach any race played so far, saving the entries on the way
+- **Share**: Share the session summary from the results screen (share sheet, or copied to the clipboard)
 - **Offline Support**: Works without internet connection (PWA)
 - **Tournament Tracking**: Points system with final standings and race history
 
@@ -87,21 +90,22 @@ This app is installable as a Progressive Web App:
 
 ## 🗺️ Map Integration
 
-The map is a layered stack (terrain, glow, course miniatures, spotlight, pins) built from the real Mario Kart World map image, zoomed and cropped around each course without any CSS scaling.
+The map is a layered stack (terrain, glow, course miniatures, spotlight, pins) built from the real Mario Kart World map image, zoomed and cropped around each course without any CSS scaling. The drawn course is lit from behind by a softly pulsing white glow, which stays still when the system asks for reduced motion. SNES courses are shown on the world course you pick them from. The route recap numbers each stop with every race played there, and sessions over 8 races draw a lighter route line.
 
 ## 🏆 Tournament System
 
-Points are awarded based on finishing position:
+Points are awarded based on finishing position (1st to 24th):
 - 1st place: 15 points
 - 2nd place: 12 points  
 - 3rd place: 10 points
 - 4th place: 8 points
-- And so on...
+- 5th to 11th place: 7, 6, 5, 4, 3, 2, 1 points
+- 12th place and below: 0 points
 
 ## 🔧 Technical Stack
 
 - **React 19** - UI framework
-- **Vite** - Build tool and dev server
+- **Vite 7** - Build tool and dev server
 - **Vanilla CSS** - Styling with CSS Grid/Flexbox
 - **Vite PWA Plugin** - Progressive Web App functionality
 - **Workbox** - Service worker and caching
@@ -143,12 +147,21 @@ Vitest `*.test.js` files sit next to the module they cover (`circuits.test.js`, 
 This project demonstrates **"vibe coding"** - an experimental development methodology that emphasizes:
 - **Conversational Programming**: Building software through natural language interaction
 - **Iterative Refinement**: Continuous improvement based on real-time feedback
-- **AI-Human Collaboration**: Leveraging Claude Sonnet 3.5 for full-stack development
+- **AI-Human Collaboration**: Leveraging Claude Sonnet 3.5, then Claude Opus 5, for full-stack development
 - **Intuitive Design**: Following user experience instincts rather than rigid specifications
 
 The result is a fully functional PWA built entirely through AI-assisted development, showcasing the potential of modern AI tools in creating production-ready applications.
 
 ## 🚀 Recent Updates
+
+### September 2026 - Grand Prix Redesign
+- **🏁 New Look**: Grand Prix arcade style, with light and dark themes that follow the system
+- **🗺️ Layered Map**: The drawn course glows on phones; on desktop a spotlight and a pin mark it on the full map
+- **🕹️ SNES Courses**: The 10 courses from update 1.8.0 (French names are provisional), in their own block; all 40 courses are selected by default
+- **👥 Names Optional**: Without names the race screen stays clean and the session ends on a route recap
+- **✏️ Positions Sheet**: Enter or fix any race's positions, moving between races with previous/next
+- **📱 Tablets**: The phone layout now covers screens up to 1100px wide, with a sticky "New session" bar
+- **🚢 Wario Shipyard**: Wario's Galleon now uses its official English name
 
 ### v2.0 - Enhanced User Experience
 - **🌈 Rainbow Road Last**: New option to guarantee Rainbow Road as the final race
