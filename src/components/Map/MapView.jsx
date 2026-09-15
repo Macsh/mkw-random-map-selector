@@ -48,6 +48,8 @@ export function MapView({
           className="map-rainbow-icon"
           src={rainbowRoadIcon}
           alt=""
+          width={450}
+          height={350}
           decoding="async"
           draggable="false"
           style={{ ...at(RAINBOW_ICON), width: `${RAINBOW_ICON.width}%` }}
@@ -72,9 +74,9 @@ export function MapPin({ spot, lift = 24 }) {
 
 export function MiniMap({ spot, className = '' }) {
   return (
-    <div className={`mini-map ${className}`} aria-hidden="true">
+    <div className={`map-mini ${className}`} aria-hidden="true">
       <MapView>
-        <span className="mini-map__dot" style={at(spot)} />
+        <span className="map-mini__dot" style={at(spot)} />
       </MapView>
     </div>
   );

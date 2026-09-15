@@ -85,14 +85,14 @@
   transform: translate(-50%, calc(-50% - clamp(16px, 4.4cqw, 30px)));
 }
 
-.mini-map {
+.map-mini {
   position: relative;
   border: 3px solid var(--ink);
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 3px 3px 0 var(--ink);
 }
-.mini-map__dot {
+.map-mini__dot {
   position: absolute;
   width: 14px;
   height: 14px;
