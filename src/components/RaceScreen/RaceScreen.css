@@ -80,6 +80,9 @@
 .standings__player { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .standings__name { overflow: hidden; font-weight: 800; font-size: 16px; text-overflow: ellipsis; white-space: nowrap; }
 .standings__chips { display: flex; gap: 4px; }
+.standings__chips button.chip { position: relative; }
+/* 30px visual chip, 44px-tall hit area (horizontal growth limited by the 4px gap) */
+.standings__chips button.chip::after { content: ''; position: absolute; inset: -9px -2px; }
 .standings__points { text-align: right; font-weight: 900; font-stretch: 125%; font-style: italic; font-size: 19px; }
 .standings__pts { color: var(--muted); font-size: 11px; font-style: normal; font-stretch: 100%; }
 .standings__hint { margin: 0; padding-top: 8px; font-size: 13px; }
