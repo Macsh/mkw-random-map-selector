@@ -31,6 +31,7 @@
 .podium__steps { display: grid; gap: 10px; align-items: end; }
 .podium__col { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
 .podium__name { display: flex; align-items: center; gap: 6px; max-width: 100%; overflow: hidden; font-weight: 800; font-size: 15px; white-space: nowrap; }
+.podium__name-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .podium__col--first .podium__name { font-size: 17px; }
 .podium__points { font-weight: 700; font-size: 13px; }
 .podium__step {
@@ -59,6 +60,7 @@
 .final-table__row--head { min-height: 36px; }
 .final-table__rank { font-size: 20px; }
 .final-table__player { display: flex; align-items: center; gap: 8px; min-width: 0; font-weight: 800; font-size: 16px; }
+.final-table__name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .final-table__num { text-align: right; font-weight: 700; font-size: 15px; }
 .final-table__points { font-weight: 900; font-stretch: 125%; font-style: italic; font-size: 19px; }
 

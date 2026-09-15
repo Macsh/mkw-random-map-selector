@@ -48,7 +48,10 @@ function Podium({ standings, scale }) {
           const standing = standings[rank - 1];
           return (
             <div key={rank} className={rank === 1 ? 'podium__col podium__col--first' : 'podium__col'}>
-              <span className="podium__name"><PlayerDot index={standing.index} size={12} />{standing.name}</span>
+              <span className="podium__name">
+                <PlayerDot index={standing.index} size={12} />
+                <span className="podium__name-text">{standing.name}</span>
+              </span>
               <span className="num muted podium__points">{standing.points}{' '}{t('common.pointsShort')}</span>
               <div className="podium__step" style={{ height: Math.round(height * scale), background }}>
                 <span className="display">{rank}</span>
@@ -76,7 +79,10 @@ function FinalTable({ standings }) {
       {standings.map((standing, rank) => (
         <div key={standing.index} className="final-table__row" role="row">
           <span role="cell" className="display num final-table__rank">{rank + 1}</span>
-          <span role="cell" className="final-table__player"><PlayerDot index={standing.index} />{standing.name}</span>
+          <span role="cell" className="final-table__player">
+            <PlayerDot index={standing.index} />
+            <span className="final-table__name">{standing.name}</span>
+          </span>
           <span role="cell" className="num final-table__num">{standing.wins}</span>
           <span role="cell" className="num final-table__num">{standing.podiums}</span>
           <span role="cell" className="num final-table__num final-table__points">{standing.points}</span>
