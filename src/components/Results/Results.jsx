@@ -166,11 +166,13 @@ function Results({ sessionData, onNewSession }) {
   if (!sessionData) return null;
 
   const { races = [], players = [] } = sessionData;
-  const hasPlayers = players.length > 0;
-  const standings = hasPlayers ? calculateStandings([], players) : [];
-  const title = t(hasPlayers ? 'end.tournamentOver' : 'end.sessionOver');
+  // Podium, table and winner line only once a position was entered; otherwise the route recap
+  const playerStandings = calculateStandings([], players);
+  const hasResults = playerStandings.some((standing) => standing.races.length > 0);
+  const standings = hasResults ? playerStandings : [];
+  const title = t(hasResults ? 'end.tournamentOver' : 'end.sessionOver');
   const titleStyle = { '--title-chars': longestWordLength(title) };
-  const summary = hasPlayers
+  const summary = players.length > 0
     ? `${t('common.races', { count: races.length })} · ${t('common.players', { count: players.length })}`
     : t('common.races', { count: races.length });
 
@@ -203,7 +205,7 @@ function Results({ sessionData, onNewSession }) {
             <h1 className="display title-shadow-sm fit-title results__title" style={titleStyle}>{title}</h1>
             <p className="muted results__summary">{summary}</p>
           </div>
-          {hasPlayers ? (
+          {hasResults ? (
             <>
               <Podium standings={standings} scale={1} />
               <FinalTable standings={standings} />
@@ -257,14 +259,14 @@ function Results({ sessionData, onNewSession }) {
           <span className="label label--brand results-desktop__brand">{t('common.brand')}</span>
           <LanguageToggle />
         </header>
-        <div className={hasPlayers ? 'results-desktop__grid' : 'results-desktop__grid results-desktop__grid--route'}>
+        <div className={hasResults ? 'results-desktop__grid' : 'results-desktop__grid results-desktop__grid--route'}>
           <div className="results-desktop__main">
             <div className="results__heading">
               <h1 className="display title-shadow-lg fit-title results__title" style={titleStyle}>{title}</h1>
               <p className="muted results__summary">{summary}</p>
             </div>
             {actions}
-            {hasPlayers ? (
+            {hasResults ? (
               <>
                 <div className="results-desktop__podium"><Podium standings={standings} scale={1.3} /></div>
                 <FinalTable standings={standings} />
@@ -277,8 +279,8 @@ function Results({ sessionData, onNewSession }) {
             )}
           </div>
           <section className="results__group">
-            <h2 className="display results__section">{t(hasPlayers ? 'end.history' : 'end.routeLong')}</h2>
-            {hasPlayers ? <HistoryCards races={races} players={players} /> : <SessionRouteMap spots={spots} className="sticker" />}
+            <h2 className="display results__section">{t(hasResults ? 'end.history' : 'end.routeLong')}</h2>
+            {hasResults ? <HistoryCards races={races} players={players} /> : <SessionRouteMap spots={spots} className="sticker" />}
           </section>
         </div>
       </main>
