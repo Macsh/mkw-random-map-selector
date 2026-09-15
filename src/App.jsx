@@ -4,7 +4,6 @@ import WorldMap from './components/WorldMap/WorldMap.jsx';
 import Results from './components/Results/Results.jsx';
 import { generateRaceSelection } from './utils/raceLogic.js';
 import { LanguageProvider } from './contexts/LanguageContext.jsx';
-import './App.css';
 
 function App() {
   const [gameState, setGameState] = useState('selection'); // 'selection', 'racing', 'results'

@@ -1,0 +1,46 @@
+.snes-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 8px;
+  border: 2px solid var(--ink);
+  border-radius: 7px;
+  background: #D9D6E0;
+  color: var(--ink);
+  font-weight: 900;
+  font-stretch: 125%;
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  flex: none;
+}
+.snes-badge--md { height: 30px; font-size: 14px; }
+.snes-badge__dots { display: flex; gap: 2px; }
+.snes-badge__dots span { width: 6px; height: 6px; border-radius: 50%; }
+
+.rainbow-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  border: 3px solid var(--outline);
+  background: var(--ink);
+  box-shadow: 3px 3px 0 var(--shadow);
+}
+
+.race-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border: 3px solid var(--outline);
+  border-radius: 9px;
+  background: var(--red);
+  color: var(--on-red);
+  font-size: 18px;
+  transform: rotate(-4deg);
+}
