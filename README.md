@@ -20,7 +20,7 @@ The goal was to see how far we could push the boundaries of conversational progr
 - **Player Management**: Track up to 4 players with tournament standings
 - **Smart Duplicate Prevention**: For 32-race sessions, prevents duplicates in the last 8 races
 - **Persistent User Preferences**: All settings (language, race count, options) saved between sessions
-- **Bilingual Support**: Toggle between English and French with flag buttons (🇺🇸/🇫🇷)
+- **Bilingual Support**: Toggle between English and French with the EN/FR buttons
 - **Light/Dark Theme**: Follows the system setting automatically, no toggle
 - **Responsive Design**: 
   - Desktop: Full world map with highlighted circuits
@@ -72,15 +72,15 @@ This app is installable as a Progressive Web App:
 
 ## 🎮 How to Use
 
-1. **Choose Language**: Toggle between English 🇺🇸 and French 🇫🇷 using the flag buttons
+1. **Choose Language**: Toggle between English and French using the EN/FR buttons
 2. **Select Race Count**: Choose how many races you want (3-32)
 3. **Rainbow Road Option**: Enable "Rainbow Road Last" to guarantee it as your final race
-4. **Customize Track Pool**: Use "Track Exclusions" to remove unwanted circuits (shows X/30 counter)
+4. **Customize Track Pool**: Open "Courses" to see a selected/total counter (40 by default) and two blocks — World (30) and SNES (10) — each with its own select-all and per-course toggles
 5. **Add Players** (Optional): Enter player names for tournament tracking
 6. **Start Session**: Begin your random circuit selection
 7. **Race Progress**: View each selected circuit on the world map
-8. **Enter Results**: Record player positions after each race (if players added)
-9. **View Results**: See final standings and complete race history
+8. **Enter Results**: Without player names, the session ends on a route recap of every course played; with names, you enter each race's finishing positions in a positions sheet, editable from any previous race
+9. **View Results**: See final standings and complete race history (with players), or the route recap (without)
 
 **💡 Pro Tip**: All your preferences (language, settings, exclusions) are automatically saved for your next session!
 
@@ -112,15 +112,30 @@ Points are awarded based on finishing position:
 ```
 src/
 ├── components/
-│   ├── SelectionScreen/    # Initial setup screen
-│   ├── WorldMap/          # Race display with map
-│   └── Results/           # Tournament results
+│   ├── SelectionScreen/    # Home screen: race count, course blocks, players
+│   ├── RaceScreen/         # One race at a time: map, standings, positions sheet
+│   ├── Results/            # Podium/table/history, or the route recap without players
+│   ├── Map/                # MapView and friends, the layered map used everywhere
+│   ├── LanguageToggle/     # EN/FR switch
+│   ├── ui/                 # Icon and badge components
+│   └── CoordinatePicker/   # Unused dev tool, not mounted in the app
+├── contexts/               # LanguageContext (t(), current language) and translations
 ├── data/
-│   └── circuits.js        # Mario Kart track data
+│   ├── circuits.js         # The 40 courses (30 world + 10 SNES)
+│   └── snesThumbnails.js   # SNES course-select thumbnails
+├── hooks/
+│   └── useIsMobile.js
 ├── utils/
-│   └── raceLogic.js       # Random selection logic
-└── App.jsx               # Main application component
+│   ├── raceLogic.js        # Random selection, points, standings
+│   ├── trackSelection.js   # Course pool / exclusion rules
+│   ├── mapGeometry.js      # Zoom, spotlight mask, route geometry
+│   ├── format.js           # Sorting and string interpolation helpers
+│   ├── share.js            # Session share text and navigator.share/clipboard
+│   └── settings.js         # localStorage persistence
+└── App.jsx                 # Session state and screen switching
 ```
+
+Vitest `*.test.js` files sit next to the module they cover (`circuits.test.js`, `raceLogic.test.js`, `trackSelection.test.js`, `mapGeometry.test.js`, `format.test.js`, `share.test.js`, `translations.test.js`).
 
 ## 🎯 Development Approach
 
