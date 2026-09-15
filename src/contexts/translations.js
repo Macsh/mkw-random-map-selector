@@ -83,7 +83,7 @@ export const translations = {
     'common.rainbowLastShort': 'Arc-en-ciel en dernier',
     'common.pointsShort': 'pts',
     'common.language': 'Langue',
-    'home.title': 'Sélecteur de circuits',
+    'home.title': 'Sélecteur de circuits',
     'home.raceCount': 'Nombre de courses',
     'home.rainbowLast': 'Route Arc-en-ciel en dernier',
     'home.rainbowLastHelp': 'Toujours la dernière course de la session.',
