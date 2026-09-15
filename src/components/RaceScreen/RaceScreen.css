@@ -167,6 +167,7 @@
 .stepper { display: flex; align-items: stretch; border: 3px solid var(--outline); border-radius: 14px; overflow: hidden; box-shadow: 3px 3px 0 var(--shadow); }
 .stepper__btn { width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; border: 0; background: var(--surface-2); color: var(--text); }
 .stepper__btn:disabled { opacity: 0.4; cursor: default; }
+.stepper__btn:focus-visible { outline-offset: -3px; } /* the stepper clips an outer ring */
 .stepper__value {
   width: 64px;
   display: flex;
