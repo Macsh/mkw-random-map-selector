@@ -23,8 +23,8 @@ The goal was to see how far we could push the boundaries of conversational progr
 - **Bilingual Support**: Toggle between English and French with the EN/FR buttons
 - **Light/Dark Theme**: Follows the system setting automatically, no toggle
 - **Responsive Design**: 
-  - Desktop: Full world map with highlighted circuits
-  - Mobile: Zoomed circuit view + mini-map with location pin
+  - Desktop: Full world map with a spotlight and a pin on the drawn course, plus a separate zoomed card
+  - Mobile: Zoomed circuit view + a mini-map with a dot
 - **No-Player-Names Flow**: Without players, races and results show a route recap instead of standings
 - **Positions Sheet**: Enter or edit a race's finishing positions from a dedicated sheet, including past races
 - **Offline Support**: Works without internet connection (PWA)
