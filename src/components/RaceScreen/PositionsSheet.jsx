@@ -8,11 +8,21 @@ const MAX_POSITION = 24;
 
 // Bottom sheet (centred dialog on desktop). Positions are optional; duplicates block saving.
 // Previous/next buttons move between races 0..lastRaceIndex, saving the valid entries first.
-function PositionsSheet({ raceIndex, lastRaceIndex, courseName, players, initialPositions, onCancel, onSave, onNavigate }) {
+function PositionsSheet({ raceIndex, lastRaceIndex, courseName, players, initialPositions, initialFocus = 'dialog', onCancel, onSave, onNavigate }) {
   const { t, language } = useLanguage();
   const [values, setValues] = useState(() => initialPositions.map((position) => (position ? String(position) : '')));
   // The backdrop closes the sheet only for a press that starts and ends on it (not a drag out of the sheet)
   const pressStartedOnBackdrop = useRef(false);
+  const dialogRef = useRef(null);
+  const previousRef = useRef(null);
+  const nextRef = useRef(null);
+
+  // Focus goes to the dialog itself, not an input (that would open the phone keyboard). After a
+  // previous/next move the sheet remounts: focus stays on that button while it is still enabled.
+  useEffect(() => {
+    const button = initialFocus === 'previous' ? previousRef.current : initialFocus === 'next' ? nextRef.current : null;
+    (button && !button.disabled ? button : dialogRef.current).focus();
+  }, [initialFocus]);
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -51,7 +61,7 @@ function PositionsSheet({ raceIndex, lastRaceIndex, courseName, players, initial
         pressStartedOnBackdrop.current = false;
       }}
     >
-      <div className="sheet" role="dialog" aria-modal="true" aria-labelledby="positions-sheet-title">
+      <div ref={dialogRef} className="sheet" role="dialog" aria-modal="true" aria-labelledby="positions-sheet-title" tabIndex={-1}>
         <div className="sheet__grabber" aria-hidden="true" />
         <div className="sheet__head">
           <div className="sheet__heading">
@@ -62,6 +72,7 @@ function PositionsSheet({ raceIndex, lastRaceIndex, courseName, players, initial
             <button
               type="button"
               className="sheet__nav-btn"
+              ref={previousRef}
               aria-label={t('sheet.previousRace')}
               disabled={blocked || raceIndex <= 0}
               onClick={() => onNavigate(raceIndex - 1, numbers)}
@@ -71,6 +82,7 @@ function PositionsSheet({ raceIndex, lastRaceIndex, courseName, players, initial
             <button
               type="button"
               className="sheet__nav-btn"
+              ref={nextRef}
               aria-label={t('sheet.nextRace')}
               disabled={blocked || raceIndex >= lastRaceIndex}
               onClick={() => onNavigate(raceIndex + 1, numbers)}

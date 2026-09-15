@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLanguage } from '../../contexts/useLanguage.js';
 import { getCircuitName, getCircuitShortName, getMapSpot, getParentCircuit, isSnes } from '../../data/circuits.js';
 import { getSnesThumbnail } from '../../data/snesThumbnails.js';
@@ -58,7 +58,23 @@ function RaceScreen({ currentRace, races, raceIndex, totalRaces, players, onNext
   const { t, language } = useLanguage();
   const isMobile = useIsMobile();
   const [editingRaceIndex, setEditingRaceIndex] = useState(null);
+  // Where focus lands when the sheet mounts: the dialog, or the previous/next button just used
+  const [sheetFocus, setSheetFocus] = useState('dialog');
+  const openerRef = useRef(null);
+  const openSheet = useCallback((index) => {
+    openerRef.current = document.activeElement;
+    setSheetFocus('dialog');
+    setEditingRaceIndex(index);
+  }, []);
   const closeSheet = useCallback(() => setEditingRaceIndex(null), []);
+  const sheetOpen = editingRaceIndex !== null;
+
+  // Once the sheet is closed (and the screen is no longer inert), focus returns to what opened it
+  useEffect(() => {
+    if (sheetOpen || !openerRef.current) return;
+    if (openerRef.current.isConnected) openerRef.current.focus();
+    openerRef.current = null;
+  }, [sheetOpen]);
 
   if (!currentRace) return null;
 
@@ -77,7 +93,7 @@ function RaceScreen({ currentRace, races, raceIndex, totalRaces, players, onNext
   const actions = (
     <div className={hasPlayers ? 'race-actions race-actions--split' : 'race-actions'}>
       {hasPlayers && (
-        <button type="button" className="btn" onClick={() => setEditingRaceIndex(raceIndex)}>
+        <button type="button" className="btn" onClick={() => openSheet(raceIndex)}>
           <Icon name="podium" />
           {t('race.positions')}
         </button>
@@ -95,14 +111,15 @@ function RaceScreen({ currentRace, races, raceIndex, totalRaces, players, onNext
       races={races}
       raceIndex={raceIndex}
       totalRaces={totalRaces}
-      onEditRace={setEditingRaceIndex}
+      onEditRace={openSheet}
       hint={t(isMobile ? 'race.tapToEdit' : 'race.clickToEdit')}
     />
   );
 
-  const sheet = editingRaceIndex !== null && (
+  const sheet = sheetOpen && (
     <PositionsSheet
       key={editingRaceIndex}
+      initialFocus={sheetFocus}
       raceIndex={editingRaceIndex}
       lastRaceIndex={raceIndex}
       courseName={getCircuitName(races[editingRaceIndex], language)}
@@ -115,6 +132,7 @@ function RaceScreen({ currentRace, races, raceIndex, totalRaces, players, onNext
       }}
       onNavigate={(targetIndex, positions) => {
         onPositionsEntered(positions, editingRaceIndex);
+        setSheetFocus(targetIndex < editingRaceIndex ? 'previous' : 'next');
         setEditingRaceIndex(targetIndex);
       }}
     />
@@ -125,7 +143,7 @@ function RaceScreen({ currentRace, races, raceIndex, totalRaces, players, onNext
   const layout = isMobile ? (
     <div className="race">
       <div className="checker" />
-      <main className="race__body">
+      <main className="race__body" inert={sheetOpen}>
         <div className="race__top">
           <RaceTitle raceIndex={raceIndex} totalRaces={totalRaces} />
           <LanguageToggle />
@@ -151,13 +169,13 @@ function RaceScreen({ currentRace, races, raceIndex, totalRaces, players, onNext
   ) : (
     <div className="race race--desktop">
       <div className="checker" />
-      <header className="race-header">
+      <header className="race-header" inert={sheetOpen}>
         <RaceTitle raceIndex={raceIndex} totalRaces={totalRaces} />
         <RaceProgress raceIndex={raceIndex} totalRaces={totalRaces} />
         <div className="race-header__spacer" />
         <LanguageToggle />
       </header>
-      <main className="race-desktop">
+      <main className="race-desktop" inert={sheetOpen}>
         <div className="sticker race-desktop__map">
           <MapView spot={spot} effect="spotlight" dim aspect={MAP_ASPECT} className="race-desktop__map-view">
             <MapPin spot={spot} />
