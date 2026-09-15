@@ -38,6 +38,8 @@
 .map-glow {
   position: absolute;
   animation: map-glow-pulse 1.4s ease-in-out infinite alternate;
+  /* Own compositor layer keeps the pulse smooth on large desktop cards; raster softness is invisible on a soft gradient */
+  will-change: transform, opacity;
   border-radius: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
