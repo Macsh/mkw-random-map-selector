@@ -28,6 +28,9 @@ function SelectionScreen({ onStartSession }) {
   const [players, setPlayers] = useState(['', '', '', '']);
 
   const activePlayers = players.map((name) => name.trim()).filter(Boolean);
+  // A filled field's dot shows the colour its player gets in the race (blank fields are skipped there)
+  let filledCount = 0;
+  const dotIndexes = players.map((name, index) => (name.trim() ? filledCount++ : index));
   const title = t('home.title');
   const titleStyle = { '--title-chars': longestWordLength(title) };
   const selectedCount = circuits.length - excludedTracks.length;
@@ -125,7 +128,7 @@ function SelectionScreen({ onStartSession }) {
                 const placeholder = t('home.playerPlaceholder', { number: index + 1 });
                 return (
                   <label key={index} className="player-field">
-                    <PlayerDot index={index} />
+                    <PlayerDot index={dotIndexes[index]} />
                     <input
                       type="text"
                       value={name}
