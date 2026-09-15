@@ -24,7 +24,7 @@ The goal was to see how far we could push the boundaries of conversational progr
 - **Light/Dark Theme**: Follows the system setting automatically, no toggle
 - **Responsive Design**: 
   - Desktop: Full world map with a spotlight and a pin on the drawn course, plus a separate zoomed card
-  - Mobile: Zoomed circuit view + a mini-map with a dot
+  - Phones and tablets (up to 1100px wide): Zoomed circuit view + a mini-map with a dot
 - **No-Player-Names Flow**: Without players, races and results show a route recap instead of standings
 - **Positions Sheet**: Enter or edit a race's finishing positions from a dedicated sheet; its previous/next arrows reach any race played so far, saving the entries on the way
 - **Offline Support**: Works without internet connection (PWA)
@@ -33,7 +33,7 @@ The goal was to see how far we could push the boundaries of conversational progr
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v18 or higher)
+- Node.js 22.12 or higher (required by Vite 7 and Vitest 5)
 - npm or yarn
 
 ### Installation
@@ -54,7 +54,7 @@ npm install
 npm run dev
 ```
 
-4. Open your browser and navigate to `http://localhost:5173`
+4. Open your browser and navigate to `http://localhost:5173/mkw-random-map-selector/`
 
 ## 🛠️ Available Scripts
 
@@ -62,6 +62,7 @@ npm run dev
 - `npm run build` - Build for production
 - `npm run preview` - Preview production build locally
 - `npm run lint` - Run ESLint for code quality checks
+- `npm test` - Run the Vitest unit tests once
 
 ## 📱 PWA Features
 
@@ -130,7 +131,7 @@ src/
 │   ├── trackSelection.js   # Course pool / exclusion rules
 │   ├── mapGeometry.js      # Zoom, spotlight mask, route geometry
 │   ├── format.js           # Sorting and string interpolation helpers
-│   ├── share.js            # Session share text and navigator.share/clipboard
+│   ├── share.js            # Session share text (Results.jsx calls Web Share / clipboard)
 │   └── settings.js         # localStorage persistence
 └── App.jsx                 # Session state and screen switching
 ```
