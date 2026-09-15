@@ -1,259 +1,193 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useLanguage } from '../../contexts/useLanguage.js';
-import { circuits, getCircuitName } from '../../data/circuits.js';
+import { circuits } from '../../data/circuits.js';
 import { loadSettings, updateSetting } from '../../utils/settings.js';
+import { countRepeats } from '../../utils/raceLogic.js';
+import { sanitizeExcluded } from '../../utils/trackSelection.js';
+import { useIsMobile } from '../../hooks/useIsMobile.js';
 import LanguageToggle from '../LanguageToggle/LanguageToggle.jsx';
+import Icon from '../ui/Icon.jsx';
+import { RainbowBadge, PlayerDot } from '../ui/Badges.jsx';
+import { MapView } from '../Map/MapView.jsx';
+import TrackBlocks from './TrackBlocks.jsx';
 import './SelectionScreen.css';
 
+const RACE_OPTIONS = [3, 4, 5, 6, 8, 12, 16, 32];
+
 function SelectionScreen({ onStartSession }) {
-  const [raceCount, setRaceCount] = useState(8);
-  const [showPlayerOptions, setShowPlayerOptions] = useState(false);
+  const { t } = useLanguage();
+  const isMobile = useIsMobile();
+  // Saved preferences are read once, before the first render
+  const [initial] = useState(loadSettings);
+  const [raceCount, setRaceCount] = useState(initial.raceCount);
+  const [rainbowRoadLast, setRainbowRoadLast] = useState(initial.rainbowRoadLast);
+  const [showTrackOptions, setShowTrackOptions] = useState(initial.showTrackOptions);
+  const [showPlayerOptions, setShowPlayerOptions] = useState(initial.showPlayerOptions);
+  const [excludedTracks, setExcludedTracks] = useState(() => sanitizeExcluded(initial.excludedTracks, initial.rainbowRoadLast));
   const [players, setPlayers] = useState(['', '', '', '']);
-  const [rainbowRoadLast, setRainbowRoadLast] = useState(false);
-  const [showTrackOptions, setShowTrackOptions] = useState(false);
-  const [excludedTracks, setExcludedTracks] = useState(new Set());
-  const { t, language } = useLanguage();
 
-  const raceOptions = [3, 4, 5, 6, 8, 12, 16, 32];
+  const activePlayers = players.map((name) => name.trim()).filter(Boolean);
+  const selectedCount = circuits.length - excludedTracks.length;
+  const repeats = countRepeats(raceCount, selectedCount, rainbowRoadLast);
 
-  // Load user preferences on mount
-  useEffect(() => {
-    const settings = loadSettings();
-    setRaceCount(settings.raceCount);
-    setRainbowRoadLast(settings.rainbowRoadLast);
-    setShowPlayerOptions(settings.showPlayerOptions);
-    setShowTrackOptions(settings.showTrackOptions);
-    setExcludedTracks(new Set(settings.excludedTracks));
-  }, []);
-
-  // Save race count preference
-  const handleRaceCountChange = (count) => {
+  const changeRaceCount = (count) => {
     setRaceCount(count);
     updateSetting('raceCount', count);
   };
 
-  // Save rainbow road preference
-  const handleRainbowRoadChange = (checked) => {
-    setRainbowRoadLast(checked);
-    updateSetting('rainbowRoadLast', checked);
-    
-    // If Rainbow Road Last is enabled, ensure Rainbow Road is not excluded
-    if (checked && excludedTracks.has('rainbow_road')) {
-      const newExcluded = new Set(excludedTracks);
-      newExcluded.delete('rainbow_road');
-      setExcludedTracks(newExcluded);
-      updateSetting('excludedTracks', Array.from(newExcluded));
-    }
+  const changeExcluded = (next) => {
+    if (next === excludedTracks) return; // refused by the selection rules
+    setExcludedTracks(next);
+    updateSetting('excludedTracks', next);
   };
 
-  // Save player options visibility preference
-  const handleShowPlayerOptions = (show) => {
-    setShowPlayerOptions(show);
-    updateSetting('showPlayerOptions', show);
+  const toggleRainbowRoadLast = () => {
+    const next = !rainbowRoadLast;
+    setRainbowRoadLast(next);
+    updateSetting('rainbowRoadLast', next);
+    changeExcluded(sanitizeExcluded(excludedTracks, next));
   };
 
-  // Save track options visibility preference
-  const handleShowTrackOptions = (show) => {
-    setShowTrackOptions(show);
-    updateSetting('showTrackOptions', show);
+  const toggleTrackOptions = () => {
+    setShowTrackOptions(!showTrackOptions);
+    updateSetting('showTrackOptions', !showTrackOptions);
   };
 
-  const handlePlayerChange = (index, value) => {
-    const newPlayers = [...players];
-    newPlayers[index] = value;
-    setPlayers(newPlayers);
+  const togglePlayerOptions = () => {
+    setShowPlayerOptions(!showPlayerOptions);
+    updateSetting('showPlayerOptions', !showPlayerOptions);
   };
 
-  const getActivePlayers = () => {
-    return players.filter(player => player.trim() !== '');
+  const changePlayer = (index, value) => {
+    setPlayers((previous) => previous.map((name, i) => (i === index ? value : name)));
   };
 
-  const handleTrackExclusion = (trackId, isExcluded) => {
-    // Prevent excluding Rainbow Road if "Rainbow Road Last" is enabled
-    if (trackId === 'rainbow_road' && isExcluded && rainbowRoadLast) {
-      return; // Don't allow excluding Rainbow Road when it's set to be last
-    }
-    
-    const newExcluded = new Set(excludedTracks);
-    if (isExcluded) {
-      newExcluded.add(trackId);
-    } else {
-      newExcluded.delete(trackId);
-    }
-    
-    // Ensure at least 3 tracks remain available
-    const availableTracks = circuits.length - newExcluded.size;
-    if (availableTracks >= 3) {
-      setExcludedTracks(newExcluded);
-      updateSetting('excludedTracks', Array.from(newExcluded));
-    }
+  const start = () => {
+    onStartSession({ raceCount, players: activePlayers, rainbowRoadLast, excludedTracks });
   };
 
-  const handleSelectAllTracks = () => {
-    setExcludedTracks(new Set());
-    updateSetting('excludedTracks', []);
-  };
+  const settings = (
+    <div className="home__settings">
+      {!isMobile && (
+        <div className="home__lang">
+          <LanguageToggle />
+        </div>
+      )}
 
-  const handleDeselectAllTracks = () => {
-    // Keep at least 3 tracks available, so exclude all but the first 3
-    const newExcluded = new Set();
-    circuits.forEach((circuit, index) => {
-      if (index >= 3) {
-        newExcluded.add(circuit.id);
-      }
-    });
-    setExcludedTracks(newExcluded);
-    updateSetting('excludedTracks', Array.from(newExcluded));
-  };
+      <section className="sticker home-card">
+        <h2 className="display home-card__title">{t('home.raceCount')}</h2>
+        <div className="race-options">
+          {RACE_OPTIONS.map((count) => (
+            <button key={count} type="button" className="pill" aria-pressed={raceCount === count} onClick={() => changeRaceCount(count)}>
+              {count}
+            </button>
+          ))}
+        </div>
+      </section>
 
-  const handleStartSession = () => {
-    const activePlayers = getActivePlayers();
-    onStartSession({
-      raceCount,
-      players: activePlayers.length > 0 ? activePlayers : [],
-      rainbowRoadLast,
-      excludedTracks: Array.from(excludedTracks)
-    });
-  };
+      <button type="button" role="switch" aria-checked={rainbowRoadLast} className="sticker home-switch" onClick={toggleRainbowRoadLast}>
+        <RainbowBadge size={52} radius={12} />
+        <span className="home-switch__text">
+          <span className="home-switch__label">{t('home.rainbowLast')}</span>
+          <span className="muted home-switch__help">{t('home.rainbowLastHelp')}</span>
+        </span>
+        <span className="switch" aria-hidden="true">
+          <span className="switch__knob" />
+        </span>
+      </button>
+
+      <section className="sticker home-options">
+        <button type="button" className="option-row" aria-expanded={showTrackOptions} onClick={toggleTrackOptions}>
+          <span className="option-row__icon"><Icon name="map" size={22} /></span>
+          <span className="option-row__label">{t('home.courses')}</span>
+          <span className="option-row__value num">{selectedCount}/{circuits.length}</span>
+          <Icon name={showTrackOptions ? 'chevronDown' : 'chevronRight'} />
+        </button>
+        {showTrackOptions && (
+          <TrackBlocks excludedTracks={excludedTracks} rainbowRoadLast={rainbowRoadLast} onChange={changeExcluded} />
+        )}
+
+        <div className="home-options__rule" />
+
+        <button type="button" className="option-row" aria-expanded={showPlayerOptions} onClick={togglePlayerOptions}>
+          <span className="option-row__icon"><Icon name="users" size={22} /></span>
+          <span className="option-row__label">{t('home.players')}</span>
+          <span className="option-row__value num">{activePlayers.length > 0 ? activePlayers.length : t('home.noPlayers')}</span>
+          <Icon name={showPlayerOptions ? 'chevronDown' : 'chevronRight'} />
+        </button>
+        {showPlayerOptions && (
+          <div className="players-panel">
+            <div className="players-panel__grid">
+              {players.map((name, index) => {
+                const placeholder = t('home.playerPlaceholder', { number: index + 1 });
+                return (
+                  <label key={index} className="player-field">
+                    <PlayerDot index={index} />
+                    <input
+                      type="text"
+                      value={name}
+                      maxLength={16}
+                      placeholder={placeholder}
+                      aria-label={placeholder}
+                      onChange={(event) => changePlayer(index, event.target.value)}
+                    />
+                  </label>
+                );
+              })}
+            </div>
+            <p className="muted players-panel__help">{t('home.playersHelp')}</p>
+          </div>
+        )}
+      </section>
+
+      {repeats > 0 && <p className="home-warning" role="status">{t('home.repeatWarning', { count: repeats })}</p>}
+
+      <div className="home-start">
+        <button type="button" className="btn btn--primary btn--block home-start__button" onClick={start}>
+          {t('home.start')}
+          <Icon name="play" size={20} />
+        </button>
+        <p className="muted home-start__summary">
+          <strong>{t('common.races', { count: raceCount })}</strong>
+          {activePlayers.length > 0 && ` · ${t('common.players', { count: activePlayers.length })}`}
+          {rainbowRoadLast && ` · ${t('common.rainbowLastShort')}`}
+        </p>
+      </div>
+    </div>
+  );
+
+  if (isMobile) {
+    return (
+      <div className="home">
+        <div className="checker" />
+        <main className="home__body home__body--mobile">
+          <header className="home__header">
+            <span className="label label--brand">{t('common.brand')}</span>
+            <LanguageToggle />
+          </header>
+          <h1 className="display title-shadow-sm home__title">{t('home.title')}</h1>
+          {settings}
+        </main>
+      </div>
+    );
+  }
 
   return (
-    <div className="selection-screen">
-      <div className="selection-container">
-        <div className="header-with-language">
-          <div className="title-with-flags">
-            <div className="title-block">
-              <h1 className="title">{t('app.title')}</h1>
-              <h2 className="subtitle">{t('app.subtitle')}</h2>
+    <div className="home">
+      <div className="checker" />
+      <main className={`home__body home__body--desktop${showTrackOptions ? ' home__body--top' : ''}`}>
+        <div className="home__hero">
+          <span className="label label--brand home__brand">{t('common.brand')}</span>
+          <h1 className="display title-shadow-lg home__title">{t('home.title')}</h1>
+          <div className="home__map">
+            <div className="sticker home__map-card">
+              <MapView className="home__map-view" />
             </div>
-            <LanguageToggle />
+            <span className="sticker display home__map-badge">{t('home.courseCountBadge', { count: circuits.length })}</span>
           </div>
         </div>
-
-        <div className="race-count-section">
-          <h3>{t('selection.raceCount')}</h3>
-          <div className="race-options">
-            {raceOptions.map(count => (
-              <button
-                key={count}
-                className={`race-option ${raceCount === count ? 'selected' : ''}`}
-                onClick={() => handleRaceCountChange(count)}
-              >
-                {count}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="rainbow-road-section">
-          <label className="rainbow-road-option">
-            <input
-              type="checkbox"
-              checked={rainbowRoadLast}
-              onChange={(e) => handleRainbowRoadChange(e.target.checked)}
-              className="rainbow-road-checkbox"
-            />
-            <span className="rainbow-road-text">
-              🌈 {t('selection.rainbowRoadLast')}
-            </span>
-          </label>
-          <p className="rainbow-road-help">
-            {t('selection.rainbowRoadLastHelp')}
-          </p>
-        </div>
-
-        <div className="track-section">
-          <button
-            className="toggle-tracks"
-            onClick={() => handleShowTrackOptions(!showTrackOptions)}
-          >
-            {showTrackOptions ? t('selection.hideTrackOptions') : t('selection.showTrackOptions')}
-            <span className="track-counter">
-              ({circuits.length - excludedTracks.size}/{circuits.length})
-            </span>
-          </button>
-
-          {showTrackOptions && (
-            <div className="track-options">
-              <h3>{t('selection.excludeTracks')}</h3>
-              <div className="track-controls">
-                <button onClick={handleSelectAllTracks} className="track-control-btn">
-                  {t('selection.selectAll')}
-                </button>
-                <button onClick={handleDeselectAllTracks} className="track-control-btn">
-                  {t('selection.deselectAll')}
-                </button>
-              </div>
-              <div className="track-grid">
-                {circuits.map((circuit) => (
-                  <label key={circuit.id} className="track-option">
-                    <input
-                      type="checkbox"
-                      checked={!excludedTracks.has(circuit.id)}
-                      onChange={(e) => handleTrackExclusion(circuit.id, !e.target.checked)}
-                      disabled={circuit.id === 'rainbow_road' && rainbowRoadLast}
-                      className="track-checkbox"
-                    />
-                    <span className="track-name">
-                      {getCircuitName(circuit, language)}
-                    </span>
-                  </label>
-                ))}
-              </div>
-              <p className="track-help">
-                {t('selection.excludeTracksHelp')}
-              </p>
-            </div>
-          )}
-        </div>
-
-        <div className="player-section">
-          <button
-            className="toggle-players"
-            onClick={() => handleShowPlayerOptions(!showPlayerOptions)}
-          >
-            {showPlayerOptions ? t('selection.hidePlayers') : t('selection.showPlayers')}
-          </button>
-
-          {showPlayerOptions && (
-            <div className="player-options">
-              <h3>{t('selection.playerNames')}</h3>
-              <div className="player-inputs">
-                {players.map((player, index) => (
-                  <input
-                    key={index}
-                    type="text"
-                    placeholder={`${t('selection.playerPlaceholder')} ${index + 1}`}
-                    value={player}
-                    onChange={(e) => handlePlayerChange(index, e.target.value)}
-                    className="player-input"
-                  />
-                ))}
-              </div>
-              <p className="player-help">
-                {t('selection.playerHelp')}
-              </p>
-            </div>
-          )}
-        </div>
-
-        <button className="start-button" onClick={handleStartSession}>
-          {t('selection.startSession')}
-        </button>
-
-        <div className="info-section">
-          <p>
-            {t('selection.selected')} <strong>{raceCount} {t('selection.races')}</strong>
-            {getActivePlayers().length > 0 && (
-              <span> {t('selection.with')} {getActivePlayers().length} {t('selection.players')}</span>
-            )}
-          </p>
-          {raceCount === 32 && (
-            <p className="warning">
-              {rainbowRoadLast ? t('selection.warning32WithRainbow') : t('selection.warning32')}
-            </p>
-          )}
-        </div>
-      </div>
+        {settings}
+      </main>
     </div>
   );
 }
