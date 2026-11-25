@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLanguage } from '../../contexts/useLanguage.js';
-import { getCircuitName, getCircuitShortName, getMapSpot, getParentCircuit, isSnes } from '../../data/circuits.js';
-import { getSnesThumbnail } from '../../data/snesThumbnails.js';
+import { getCircuitName, getCircuitShortName, getMapSpot, getParentCircuit, isSnes, isSubCourse } from '../../data/circuits.js';
+import { getSubCourseThumbnail } from '../../data/subCourseThumbnails.js';
 import { MAP_ASPECT } from '../../utils/mapGeometry.js';
 import { longestWordLength } from '../../utils/format.js';
 import { useIsMobile } from '../../hooks/useIsMobile.js';
@@ -40,14 +40,15 @@ function RaceProgress({ raceIndex, totalRaces }) {
   );
 }
 
-function SnesTrack({ circuit, variant }) {
+// SNES and remixed courses: their thumbnail and the world course to pick them from
+function SubCourseTrack({ circuit, variant }) {
   const { t, language } = useLanguage();
   const parentName = getCircuitName(getParentCircuit(circuit), language);
   return (
-    <div className={`sticker snes-track snes-track--${variant}`}>
-      <img src={getSnesThumbnail(circuit.id)} alt="" decoding="async" />
-      <div className="snes-track__text">
-        <span className="label">{t('race.snesTrack')}</span>
+    <div className={`sticker race-subcourse race-subcourse--${variant}`}>
+      <img src={getSubCourseThumbnail(circuit.id)} alt="" width="560" height="320" decoding="async" />
+      <div className="race-subcourse__text">
+        <span className="label">{t(isSnes(circuit) ? 'race.snesTrack' : 'race.remixTrack')}</span>
         <strong>{t('race.pickFrom', { course: parentName })}</strong>
       </div>
     </div>
@@ -81,6 +82,7 @@ function RaceScreen({ currentRace, races, raceIndex, totalRaces, players, onNext
   const hasPlayers = players.length > 0;
   const isLastRace = raceIndex >= totalRaces - 1;
   const snes = isSnes(currentRace);
+  const subCourse = isSubCourse(currentRace);
   const spot = getMapSpot(currentRace);
   const title = snes ? getCircuitShortName(currentRace, language) : getCircuitName(currentRace, language);
   const titleStyle = { '--title-chars': longestWordLength(title) };
@@ -138,7 +140,7 @@ function RaceScreen({ currentRace, races, raceIndex, totalRaces, players, onNext
     />
   );
 
-  const zoomAspect = snes ? SIDE_CARD_WIDTH / 170 : hasPlayers ? SIDE_CARD_WIDTH / 200 : 1;
+  const zoomAspect = subCourse ? SIDE_CARD_WIDTH / 170 : hasPlayers ? SIDE_CARD_WIDTH / 200 : 1;
 
   const layout = isMobile ? (
     <div className="race">
@@ -161,7 +163,7 @@ function RaceScreen({ currentRace, races, raceIndex, totalRaces, players, onNext
           </h1>
         </div>
 
-        {snes && <SnesTrack circuit={currentRace} variant="row" />}
+        {subCourse && <SubCourseTrack circuit={currentRace} variant="row" />}
         {actions}
         {standings}
       </main>
@@ -185,14 +187,14 @@ function RaceScreen({ currentRace, races, raceIndex, totalRaces, players, onNext
           <div className="race-desktop__heading">
             <span className="label">{t('race.drawn')}</span>
             {snes && <SnesBadge size="md" />}
-            <h1 className={`display title-shadow-sm fit-title race-desktop__title${snes ? ' race-desktop__title--snes' : ''}`} style={titleStyle}>
+            <h1 className={`display title-shadow-sm fit-title race-desktop__title${subCourse ? ' race-desktop__title--sub' : ''}`} style={titleStyle}>
               {title}
             </h1>
           </div>
           <div className="sticker race-desktop__zoom">
             <MapView spot={spot} effect="glow" zoom={4} aspect={zoomAspect} />
           </div>
-          {snes && <SnesTrack circuit={currentRace} variant="card" />}
+          {subCourse && <SubCourseTrack circuit={currentRace} variant="card" />}
           {actions}
           {standings}
         </aside>

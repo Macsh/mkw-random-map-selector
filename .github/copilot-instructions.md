@@ -4,7 +4,7 @@
 A Progressive Web App (PWA) that randomly picks Mario Kart World courses for a session, with optional player standings. React 19 + Vite 7, plain JavaScript/JSX and vanilla CSS. The UI is bilingual EN/FR and follows the system light/dark theme (no toggle).
 
 ## Key Facts
-- 40 courses in `src/data/circuits.js`: 30 world courses + 10 SNES courses (update 1.8.0). SNES courses have a `parentId` and use its map point through `getMapSpot`.
+- 48 courses in `src/data/circuits.js`: 30 world courses + 10 SNES courses (update 1.8.0) + 8 remixed "2" courses (update 1.9.0). SNES and remixed courses are sub-courses: they have a `parentId` and use its map point through `getMapSpot`.
 - 3, 4, 5, 6, 8, 12, 16 or 32 races, an optional "Rainbow Road last", and at least 3 courses always selected.
 - 0–4 players (optional). Without names: no standings and no Positions button. Results show a podium once a position was entered, otherwise the session route.
 - Compact (phone/tablet) layouts up to 1100px wide (`useIsMobile`), desktop layouts above. Desktop grids don't fit below that, so re-check 820–1100px before changing it.
@@ -12,7 +12,7 @@ A Progressive Web App (PWA) that randomly picks Mario Kart World courses for a s
 - Course ids and the localStorage key `mkw-random-selector-settings` never change.
 
 ## Component Structure
-- `SelectionScreen` (+ `TrackBlocks`): home screen with race count, course blocks (SNES first) and players
+- `SelectionScreen` (+ `TrackBlocks`): home screen with race count, course blocks (Remixed, SNES, then World) and players
 - `RaceScreen` (+ `Standings`, `PositionsSheet`): one race at a time on the map, live standings, positions entry
 - `Results`: podium, final table and history with players, or the session route without
 - `Map` (`MapView`, `MapPin`, `MiniMap`, `SessionRouteMap`): the layered world map used everywhere

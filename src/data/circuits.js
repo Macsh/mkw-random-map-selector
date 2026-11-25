@@ -2,11 +2,13 @@
 // World courses: x/y = centre of the course miniature on the world map, in % of the
 // 2674×2339 map images (measured on MarioKartWorld_World_Map_Stages.webp).
 // Rainbow Road is not on the miniatures layer: its point is where its icon is drawn.
-// SNES courses (update 1.8.0) are picked from an existing course and have no point of
-// their own: use getMapSpot(). French SNES names are unofficial for now.
+// Sub-courses have a parentId and no point of their own: they are picked from an existing
+// course, so use getMapSpot(). Two kinds: the SNES courses (update 1.8.0, French names
+// unofficial for now) and the remixed "2" courses (update 1.9.0; Nintendo FR confirmed
+// "Bateau volant 2" and "Souk Maskass 2", the other French names follow the same pattern).
 
 export const RAINBOW_ROAD_ID = 'rainbow_road';
-export const COURSE_GROUPS = ['world', 'snes'];
+export const COURSE_GROUPS = ['world', 'snes', 'remix'];
 
 export const circuits = [
   { id: 'acorn_heights', group: 'world', nameEn: 'Acorn Heights', nameFr: 'Chemin du chêne', x: 49.74, y: 11.33 },
@@ -50,6 +52,15 @@ export const circuits = [
   { id: 'snes_choco_island_2', group: 'snes', parentId: 'choco_mountain', nameEn: 'SNES Choco Island 2', nameFr: 'SNES Île Choco 2' },
   { id: 'snes_vanilla_lake_1', group: 'snes', parentId: 'sky_high_sundae', nameEn: 'SNES Vanilla Lake 1', nameFr: 'SNES Lac Vanille 1' },
   { id: 'snes_koopa_beach_1', group: 'snes', parentId: 'koopa_troopa_beach', nameEn: 'SNES Koopa Beach 1', nameFr: 'SNES Plage Koopa 1' },
+
+  { id: 'airship_fortress_2', group: 'remix', parentId: 'airship_fortress', nameEn: 'Airship Fortress 2', nameFr: 'Bateau volant 2' },
+  { id: 'desert_hills_2', group: 'remix', parentId: 'desert_hills', nameEn: 'Desert Hills 2', nameFr: 'Désert du soleil 2' },
+  { id: 'salty_salty_speedway_2', group: 'remix', parentId: 'salty_salty_speedway', nameEn: 'Salty Salty Speedway 2', nameFr: 'Cité Fleur-de-sel 2' },
+  { id: 'dk_pass_2', group: 'remix', parentId: 'dk_pass', nameEn: 'DK Pass 2', nameFr: 'Alpes DK 2' },
+  { id: 'koopa_troopa_beach_2', group: 'remix', parentId: 'koopa_troopa_beach', nameEn: 'Koopa Troopa Beach 2', nameFr: 'Plage Koopa 2' },
+  { id: 'shy_guy_bazaar_2', group: 'remix', parentId: 'shy_guy_bazaar', nameEn: 'Shy Guy Bazaar 2', nameFr: 'Souk Maskass 2' },
+  { id: 'mario_bros_circuit_2', group: 'remix', parentId: 'mario_bros_circuit', nameEn: 'Mario Bros. Circuit 2', nameFr: 'Circuit Mario Bros. 2' },
+  { id: 'wario_stadium_2', group: 'remix', parentId: 'wario_stadium', nameEn: 'Wario Stadium 2', nameFr: 'Stade Wario 2' },
 ];
 
 const circuitsById = Object.fromEntries(circuits.map((circuit) => [circuit.id, circuit]));
@@ -62,6 +73,9 @@ export const getCircuitName = (circuit, language = 'en') => (language === 'fr' ?
 export const getCircuitShortName = (circuit, language = 'en') => getCircuitName(circuit, language).replace(/^SNES /, '');
 
 export const isSnes = (circuit) => circuit.group === 'snes';
+
+// SNES and remixed courses: picked from an existing world course
+export const isSubCourse = (circuit) => Boolean(circuit.parentId);
 
 export const getParentCircuit = (circuit) => (circuit.parentId ? circuitsById[circuit.parentId] : circuit);
 

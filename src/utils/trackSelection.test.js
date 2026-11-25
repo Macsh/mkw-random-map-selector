@@ -12,6 +12,7 @@ import {
 
 const worldIds = getCircuitsByGroup('world').map((c) => c.id);
 const snesIds = getCircuitsByGroup('snes').map((c) => c.id);
+const remixIds = getCircuitsByGroup('remix').map((c) => c.id);
 const allIds = circuits.map((c) => c.id);
 
 describe('trackSelection', () => {
@@ -23,9 +24,10 @@ describe('trackSelection', () => {
 
   it('measures the draw pool without a locked Rainbow Road', () => {
     expect(MIN_POOL).toBe(3);
-    expect(drawPoolSize([], false)).toBe(40);
-    expect(drawPoolSize([], true)).toBe(39);
-    expect(drawPoolSize(snesIds, true)).toBe(29);
+    expect(drawPoolSize([], false)).toBe(48);
+    expect(drawPoolSize([], true)).toBe(47);
+    expect(drawPoolSize(snesIds, true)).toBe(37);
+    expect(drawPoolSize([...snesIds, ...remixIds], true)).toBe(29);
   });
 
   it('includes and excludes a single course', () => {
@@ -66,9 +68,11 @@ describe('trackSelection', () => {
     expect(groupState(noWorld, worldIds, true)).toBe('off');
   });
 
-  it('refuses to clear both blocks', () => {
+  it('refuses to clear every block', () => {
     const noSnes = setGroupIncluded([], snesIds, false, false);
-    expect(setGroupIncluded(noSnes, worldIds, false, false)).toBe(noSnes);
+    const onlyWorld = setGroupIncluded(noSnes, remixIds, false, false);
+    expect(new Set(onlyWorld)).toEqual(new Set([...snesIds, ...remixIds]));
+    expect(setGroupIncluded(onlyWorld, worldIds, false, false)).toBe(onlyWorld);
   });
 
   it('sanitizes stored exclusions', () => {
