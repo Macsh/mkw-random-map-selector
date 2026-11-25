@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { circuits, RAINBOW_ROAD_ID } from '../data/circuits.js';
+import { circuits, RAINBOW_ROAD_ID, getCircuitById } from '../data/circuits.js';
 import {
   generateRaceSelection,
   getPoints,
@@ -17,11 +17,11 @@ describe('generateRaceSelection', () => {
     expect(generateRaceSelection(8)).toHaveLength(8);
   });
 
-  it('never repeats a course while the pool lasts, SNES courses included', () => {
+  it('never repeats a course while the pool lasts, sub-courses included', () => {
     const races = ids(generateRaceSelection(32));
     expect(new Set(races).size).toBe(32);
-    // 32 unique picks among 30 world + 10 SNES courses need at least 2 SNES courses
-    expect(races.filter((id) => id.startsWith('snes_')).length).toBeGreaterThanOrEqual(2);
+    // 32 unique picks among 30 world + 18 sub-courses (10 SNES, 8 remixed) need at least 2 sub-courses
+    expect(races.filter((id) => getCircuitById(id).parentId).length).toBeGreaterThanOrEqual(2);
   });
 
   it('puts Rainbow Road last and nowhere else when requested', () => {

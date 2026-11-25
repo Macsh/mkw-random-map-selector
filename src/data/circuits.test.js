@@ -10,14 +10,17 @@ import {
   getMapSpot,
   getCircuitsByGroup,
   isSnes,
+  isSubCourse,
 } from './circuits.js';
+import { getSubCourseThumbnail } from './subCourseThumbnails.js';
 
 describe('circuits data', () => {
-  it('has 30 world courses and 10 SNES courses', () => {
-    expect(circuits).toHaveLength(40);
+  it('has 30 world courses, 10 SNES courses and 8 remixed courses', () => {
+    expect(circuits).toHaveLength(48);
     expect(getCircuitsByGroup('world')).toHaveLength(30);
     expect(getCircuitsByGroup('snes')).toHaveLength(10);
-    expect(COURSE_GROUPS).toEqual(['world', 'snes']);
+    expect(getCircuitsByGroup('remix')).toHaveLength(8);
+    expect(COURSE_GROUPS).toEqual(['world', 'snes', 'remix']);
   });
 
   it('uses unique ids', () => {
@@ -53,6 +56,25 @@ describe('circuits data', () => {
     }
   });
 
+  it('names every remixed course after its world parent, plus " 2"', () => {
+    for (const c of getCircuitsByGroup('remix')) {
+      const parent = getCircuitById(c.parentId);
+      expect(parent, c.id).toBeDefined();
+      expect(parent.group).toBe('world');
+      expect(c.x).toBeUndefined();
+      expect(c.y).toBeUndefined();
+      expect(c.id).toBe(`${parent.id}_2`);
+      expect(c.nameEn).toBe(`${parent.nameEn} 2`);
+      expect(c.nameFr).toBe(`${parent.nameFr} 2`);
+    }
+  });
+
+  it('has a thumbnail for every sub-course', () => {
+    for (const c of circuits.filter(isSubCourse)) {
+      expect(getSubCourseThumbnail(c.id), c.id).toBeTruthy();
+    }
+  });
+
   it('keeps the historical ids used by saved settings', () => {
     expect(getCircuitById(RAINBOW_ROAD_ID)).toBeDefined();
     expect(getCircuitById('warios_galleon').nameEn).toBe('Wario Shipyard');
@@ -80,9 +102,17 @@ describe('circuit helpers', () => {
   it('resolves the parent and the map point of a SNES course', () => {
     expect(isSnes(ghostValley)).toBe(true);
     expect(isSnes(booCinema)).toBe(false);
+    expect(isSubCourse(ghostValley)).toBe(true);
+    expect(isSubCourse(getCircuitById('wario_stadium_2'))).toBe(true);
+    expect(isSnes(getCircuitById('wario_stadium_2'))).toBe(false);
+    expect(isSubCourse(booCinema)).toBe(false);
     expect(getParentCircuit(ghostValley)).toBe(booCinema);
     expect(getParentCircuit(booCinema)).toBe(booCinema);
     expect(getMapSpot(ghostValley)).toEqual({ x: booCinema.x, y: booCinema.y });
     expect(getMapSpot(booCinema)).toEqual({ x: 63.43, y: 17.44 });
+  });
+
+  it('keeps the full name of a remixed course as its short name', () => {
+    expect(getCircuitShortName(getCircuitById('shy_guy_bazaar_2'), 'fr')).toBe('Souk Maskass 2');
   });
 });

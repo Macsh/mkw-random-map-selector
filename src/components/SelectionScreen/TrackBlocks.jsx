@@ -7,10 +7,11 @@ import Icon from '../ui/Icon.jsx';
 const GROUP_COPY = {
   world: { title: 'home.groupWorld', hint: 'home.groupWorldHint' },
   snes: { title: 'home.groupSnes', hint: 'home.groupSnesHint' },
+  remix: { title: 'home.groupRemix', hint: 'home.groupRemixHint' },
 };
 
-// Display order only: SNES first, the newest and shortest block, quick to switch off
-const BLOCK_ORDER = ['snes', 'world'];
+// Display order only: newest update first (remixed, then SNES), short blocks quick to switch off
+const BLOCK_ORDER = ['remix', 'snes', 'world'];
 
 const CHECK_ICONS = { on: 'check', mixed: 'dash', locked: 'lock' };
 
@@ -23,7 +24,7 @@ function Checkbox({ state }) {
   );
 }
 
-// Two blocks (world, SNES): the block checkbox selects or clears the whole block,
+// Three blocks (remixed, SNES, world): the block checkbox selects or clears the whole block,
 // each tile toggles one course. Rules (minimum pool, locked Rainbow Road) live in trackSelection.js.
 function TrackBlocks({ excludedTracks, rainbowRoadLast, onChange }) {
   const { t, language } = useLanguage();

@@ -28,7 +28,7 @@ Players' saved settings must keep working after an update. Never change the loca
 ## Architecture
 
 ### Data: `src/data/circuits.js`
-40 courses: 30 world courses plus 10 SNES courses (update 1.8.0). World courses have `x`/`y` at the centre of their miniature on the world map image (2674×2339, in %). SNES courses instead have a `parentId` and no point of their own; every map consumer gets a point via `getMapSpot(circuit)`, which returns the parent's. `getCircuitName(circuit, language)` reads `nameEn`/`nameFr`; `getCircuitShortName` strips the leading `SNES ` and is used next to an `SnesBadge`. `snesThumbnails.js` holds the SNES course-select thumbnails, kept apart so `circuits.js` stays asset-free.
+48 courses in three groups (`COURSE_GROUPS`): 30 `world` courses, 10 `snes` courses (update 1.8.0) and 8 `remix` courses (update 1.9.0: the "2" versions, e.g. `airship_fortress_2`). World courses have `x`/`y` at the centre of their miniature on the world map image (2674×2339, in %). SNES and remixed courses are sub-courses (`isSubCourse`): they have a `parentId` and no point of their own; every map consumer gets a point via `getMapSpot(circuit)`, which returns the parent's. `getCircuitName(circuit, language)` reads `nameEn`/`nameFr`; `getCircuitShortName` strips the leading `SNES ` and is used next to an `SnesBadge` (remixed courses keep their full name and get no badge). `subCourseThumbnails.js` holds the sub-course course-select thumbnails (`src/assets/snes/`, `src/assets/remix/`), kept apart so `circuits.js` stays asset-free.
 
 ### Selection rules: `src/utils/trackSelection.js`
 Pure, tested helpers around the draw pool (selected courses minus a locked Rainbow Road): `MIN_POOL = 3` is enforced on every toggle (single course or whole block), a locked Rainbow Road can't be excluded, block state is `'on' | 'off' | 'mixed'`, and `sanitizeExcluded` runs on load to drop unknown ids, un-exclude a locked Rainbow Road, and reset if the pool would fall below the minimum. The draw itself (`generateRaceSelection` in `raceLogic.js`) uses every course once, then avoids the last 8 races; when a small pool leaves nothing outside them, it avoids only the last `max(1, floor(pool / 2))` races, so a course never comes twice in a row and the order stays random.
@@ -41,7 +41,7 @@ The compact (phone and tablet) layouts apply at ≤1100px wide: `useIsMobile()` 
 
 ### Screens
 - `SelectionScreen` (+ `TrackBlocks`): home, with course blocks and select-all.
-- `RaceScreen` (+ `Standings`, `PositionsSheet`): compact uses a `glow` effect and a `MiniMap` with a red dot; desktop uses a dark `spotlight` with a red `MapPin`, plus a separate zoomed card with a `glow`. Standings and the positions sheet only render when there are players. The standings show chips for the last 3 races and the current one; the sheet's previous/next buttons reach any race played so far, saving valid entries before moving. While the sheet is open the screen behind it is `inert`, and focus returns to the control that opened it. SNES courses get an `SnesBadge` and a "pick from {course}" hint.
+- `RaceScreen` (+ `Standings`, `PositionsSheet`): compact uses a `glow` effect and a `MiniMap` with a red dot; desktop uses a dark `spotlight` with a red `MapPin`, plus a separate zoomed card with a `glow`. Standings and the positions sheet only render when there are players. The standings show chips for the last 3 races and the current one; the sheet's previous/next buttons reach any race played so far, saving valid entries before moving. While the sheet is open the screen behind it is `inert`, and focus returns to the control that opened it. Sub-courses get a `SubCourseTrack` card (thumbnail, "SNES track" or "Remixed course", and a "pick from {course}" hint); SNES courses also get an `SnesBadge`.
 - `Results`: shows a podium/table/history once at least one position was entered, otherwise a route recap (`SessionRouteMap`).
 
 ### i18n
@@ -51,11 +51,12 @@ The compact (phone and tablet) layouts apply at ≤1100px wide: `useIsMobile()` 
 Design tokens on `:root` in `src/index.css`; dark mode overrides them under `@media (prefers-color-scheme: dark)`, no toggle. Type is Archivo Variable, self-hosted via `@fontsource-variable/archivo` (imported in `main.jsx`), with only the latin `wdth` woff2 files precached by Workbox (`**/archivo-latin-wdth-*.woff2` in `vite.config.js`).
 
 ### Touchpoints when the course list changes
-- `circuits.js` (the entry itself) and, for a SNES course, `snesThumbnails.js`.
-- The course-count assertion in `circuits.test.js` (`toHaveLength(40)`).
-- The literal counts in `src/utils/trackSelection.test.js`: `drawPoolSize` 40 / 39 / 29, and the 29 exclusions when the world block is cleared with Rainbow Road locked.
-- The SNES assertion in `src/utils/raceLogic.test.js` (32 unique picks among 30 world + 10 SNES courses need at least 2 SNES courses).
-- The README feature list ("40 courses").
+- `circuits.js` (the entry itself) and, for a sub-course, `subCourseThumbnails.js` (560px-wide webp, cropped inside the white frame of the Super Mario Wiki icon).
+- The course-count assertions in `circuits.test.js` (`toHaveLength(48)` and the per-group counts).
+- The literal counts in `src/utils/trackSelection.test.js`: `drawPoolSize` 48 / 47 / 37 / 29, and the 29 exclusions when the world block is cleared with Rainbow Road locked.
+- The sub-course assertion in `src/utils/raceLogic.test.js` (32 unique picks among 30 world + 18 sub-courses need at least 2 sub-courses).
+- The README feature list ("48 courses").
+- A new group needs `COURSE_GROUPS`, `GROUP_COPY` and `BLOCK_ORDER` in `TrackBlocks.jsx`, and `home.group*` translations.
 
 ### Dead code
 `CoordinatePicker` (`src/components/CoordinatePicker/`) is not mounted anywhere and is stale; it was a one-off tool used to measure course coordinates.
@@ -77,8 +78,8 @@ Lessons from the September 2026 redesign. Follow them without asking the owner a
 ### Product
 - Most sessions are played without player names. Design and check that flow first: without names there are no standings and no Positions button, and without any position entered the results end on the route recap.
 - Never hide race data behind a truncation: route stops list every race number (`raceNumberRows`).
-- Course selection works by blocks (SNES, World) rather than extra toggles. The SNES block comes first (`BLOCK_ORDER` in `TrackBlocks.jsx`); `COURSE_GROUPS` keeps the data order.
-- The French SNES course names are provisional (unofficial sources). Fix them through `nameFr` only.
+- Course selection works by blocks (Remixed, SNES, World) rather than extra toggles. The newest update's block comes first (`BLOCK_ORDER` in `TrackBlocks.jsx`); `COURSE_GROUPS` keeps the data order.
+- The French SNES course names are provisional (unofficial sources). For the remixed courses, Nintendo FR confirmed "Bateau volant 2" and "Souk Maskass 2"; the other six follow the same "<French world name> 2" pattern. Fix them through `nameFr` only.
 
 ### Visual design
 - A drawn course is lit from behind by a white glow: never gold, never a circle or ring around it. The desktop big map adds a spotlight and a red pin.

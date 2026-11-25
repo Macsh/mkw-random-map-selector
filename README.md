@@ -14,10 +14,10 @@ In September 2026 the app got its **Grand Prix redesign** (new look, layered wor
 
 ## ✨ Features
 
-- **Random Circuit Selection**: Choose from 40 courses (30 world courses + the 10 SNES courses from update 1.8.0)
+- **Random Circuit Selection**: Choose from 48 courses (30 world courses, the 10 SNES courses from update 1.8.0 and the 8 remixed courses from update 1.9.0)
 - **Flexible Session Lengths**: 3, 4, 5, 6, 8, 12, 16, or 32 races
 - **Rainbow Road Last Option**: Force Rainbow Road to be the final race of any session
-- **Track Exclusions**: Course blocks (SNES first, then World) with select-all, and a visual counter of what's left
+- **Track Exclusions**: Course blocks (Remixed, then SNES, then World) with select-all, and a visual counter of what's left
 - **Intelligent Track Management**: Rainbow Road auto-inclusion when "Rainbow Road Last" is enabled
 - **Player Management**: Track up to 4 players with tournament standings
 - **Smart Duplicate Prevention**: Every selected course comes up once before any repeat, then never within the last 8 races; with a very small pool, never twice in a row
@@ -79,7 +79,7 @@ This app is installable as a Progressive Web App:
 1. **Choose Language**: Toggle between English and French using the EN/FR buttons
 2. **Select Race Count**: Choose how many races you want (3-32)
 3. **Rainbow Road Option**: Enable "Rainbow Road Last" to guarantee it as your final race
-4. **Customize Track Pool**: Open "Courses" to see a selected/total counter (40 by default) and two blocks — SNES (10) first, then World (30) — each with its own select-all and per-course toggles
+4. **Customize Track Pool**: Open "Courses" to see a selected/total counter (48 by default) and three blocks — Remixed (8), SNES (10), then World (30) — each with its own select-all and per-course toggles
 5. **Add Players** (Optional): Enter player names for tournament tracking
 6. **Start Session**: Begin your random circuit selection
 7. **Race Progress**: View each selected circuit on the world map
@@ -90,7 +90,7 @@ This app is installable as a Progressive Web App:
 
 ## 🗺️ Map Integration
 
-The map is a layered stack (terrain, glow, course miniatures, spotlight, pins) built from the real Mario Kart World map image, zoomed and cropped around each course without any CSS scaling. The drawn course is lit from behind by a softly pulsing white glow, which stays still when the system asks for reduced motion. SNES courses are shown on the world course you pick them from. The route recap numbers each stop with every race played there, and sessions over 8 races draw a lighter route line.
+The map is a layered stack (terrain, glow, course miniatures, spotlight, pins) built from the real Mario Kart World map image, zoomed and cropped around each course without any CSS scaling. The drawn course is lit from behind by a softly pulsing white glow, which stays still when the system asks for reduced motion. SNES and remixed courses are shown on the world course you pick them from. The route recap numbers each stop with every race played there, and sessions over 8 races draw a lighter route line.
 
 ## 🏆 Tournament System
 
@@ -126,8 +126,8 @@ src/
 │   └── CoordinatePicker/   # Unused dev tool, not mounted in the app
 ├── contexts/               # LanguageContext (t(), current language) and translations
 ├── data/
-│   ├── circuits.js         # The 40 courses (30 world + 10 SNES)
-│   └── snesThumbnails.js   # SNES course-select thumbnails
+│   ├── circuits.js         # The 48 courses (30 world + 10 SNES + 8 remixed)
+│   └── subCourseThumbnails.js # SNES and remixed course-select thumbnails
 ├── hooks/
 │   └── useIsMobile.js
 ├── utils/
@@ -153,6 +153,9 @@ This project demonstrates **"vibe coding"** - an experimental development method
 The result is a fully functional PWA built entirely through AI-assisted development, showcasing the potential of modern AI tools in creating production-ready applications.
 
 ## 🚀 Recent Updates
+
+### November 2026 - Update 1.9.0 Courses
+- **🔁 Remixed Courses**: The 8 "2" courses from update 1.9.0 (Airship Fortress 2, Desert Hills 2, Salty Salty Speedway 2, DK Pass 2, Koopa Troopa Beach 2, Shy Guy Bazaar 2, Mario Bros. Circuit 2, Wario Stadium 2), in their own block shown first; the race screen shows their thumbnail and the world course to pick them from. All 48 courses are selected by default
 
 ### September 2026 - Grand Prix Redesign
 - **🏁 New Look**: Grand Prix arcade style, with light and dark themes that follow the system
